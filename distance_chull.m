@@ -38,6 +38,6 @@ for i = 1:m
     
     [t, dist] = point_to_line(q, t, p);
 end
-display(t);
+%display(t);
 end
 
