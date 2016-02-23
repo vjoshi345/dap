@@ -26,16 +26,17 @@ for i = 1:m
     v = q - t;
     v = v/norm(v); 
     
-    max_value = -Inf;
-    p = zeros(d, 1);
-    for j = 1:n
-        temp_value = dot(v, P(:, j));
-        if temp_value > max_value
-            max_value = temp_value;
-            p = P(:, j);
-        end
-    end
-    
+    %max_value = -Inf;
+    %p = zeros(d, 1);
+%     for j = 1:n
+%         temp_value = dot(v, P(:, j));
+%         if temp_value > max_value
+%             max_value = temp_value;
+%             p = P(:, j);
+%         end
+%     end
+    [max_value, max_index] = max(v'*P);
+    p = P(:, max_index);
     [t, dist] = point_to_line(q, t, p);
 end
 %display(t);

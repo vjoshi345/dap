@@ -1,12 +1,13 @@
 % P = U*X
 % P = d*n matrix, U = d*k matrix, X = k*n matrix
-
+tic;
 % Setting Constants
 epsilon = 1;
 
 % Importing data and converting to the matrix form
 P = csvread('ionosphere_mod.csv');
-P = P';
+P = P'; 
+%P = P(:, 1:50);
 [d n] = size(P);
 
 % Computing columns of U (greedy algorithm)
@@ -39,10 +40,15 @@ U = U(:, 1:i);
 %fprintf('k:%d\n', size(U, 2));
     
 % Evaluate X using matrix multiplication
-X = (U'*U)\(U'*P);
+c = 0.1;
+U = U + c*eye(size(U));
+%X = (U'*U)\(U'*P);
+X = U\P;
 
-% Cost (Frobenius norm) ||P - U*X||^2 and Sparsity
+% Cost (Frobenius norm) ||P - U*X||^2 
 C = norm((P - U*X), 'fro');
+
+% Sparsity
 nonzero_count = sum(sum(abs(X) > 1e-5));
 sparsity_coeff = nonzero_count/numel(X);
 
@@ -52,3 +58,5 @@ fprintf('No. of dimensions(d): %d\n', d);
 fprintf('No. of clusters(k): %d\n', size(U, 2));
 fprintf('Cost ||P - UX||: %3.3f\n', C);
 fprintf('Sparsity: %3.3f\n', sparsity_coeff);
+
+toc;

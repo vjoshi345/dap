@@ -1,0 +1,108 @@
+Warning: Matrix is close to singular or badly scaled.
+         Results may be inaccurate. RCOND = 2.035140e-020. 
+> In main at 43
+No. of points(n): 351	No. of dimensions(d): 34
+No. of clusters(k): 114
+Cost ||P - UX||: 0.000
+Sparsity: 1.000
+Elapsed time is 607.760922 seconds.
+
+
+Warning: Matrix is close to singular or badly scaled.
+         Results may be inaccurate. RCOND = 3.412413e-020. 
+> In main at 44
+No. of points(n): 300	No. of dimensions(d): 34
+No. of clusters(k): 114
+Cost ||P - UX||: 0.000
+Sparsity: 1.000
+Elapsed time is 459.122729 seconds
+
+
+Warning: Matrix is close to singular or badly scaled.
+         Results may be inaccurate. RCOND = 1.064487e-020. 
+> In main at 44
+No. of points(n): 250	No. of dimensions(d): 34
+No. of clusters(k): 110
+Cost ||P - UX||: 0.000
+Sparsity: 1.000
+Elapsed time is 338.032450 seconds
+
+
+
+Warning: Matrix is close to singular or badly scaled.
+         Results may be inaccurate. RCOND = 1.660664e-020. 
+> In main at 44
+No. of points(n): 200	No. of dimensions(d): 34
+No. of clusters(k): 91
+Cost ||P - UX||: 0.000
+Sparsity: 1.000
+Elapsed time is 177.823244 seconds
+
+
+Warning: Matrix is close to singular or badly scaled.
+         Results may be inaccurate. RCOND = 1.290439e-020. 
+> In main at 44
+No. of points(n): 150	No. of dimensions(d): 34
+No. of clusters(k): 73
+Cost ||P - UX||: 0.000
+Sparsity: 1.000
+Elapsed time is 115.715489 seconds
+
+Warning: Matrix is close to singular or badly scaled.
+         Results may be inaccurate. RCOND = 9.716579e-020. 
+> In main at 44
+No. of points(n): 100	No. of dimensions(d): 34
+No. of clusters(k): 54
+Cost ||P - UX||: 0.000
+Sparsity: 1.000
+Elapsed time is 55.170436 seconds
+
+## -------------- Without conditioning ------------------------ 
+No. of points(n): 50	No. of dimensions(d): 34
+No. of clusters(k): 29
+Cost ||P - UX||: 0.845
+Sparsity: 0.440
+Elapsed time is 9.303361 seconds
+
+
+
+No. of points(n): 50	No. of dimensions(d): 34
+No. of clusters(k): 30
+Cost ||P - UX||: 0.626
+Sparsity: 0.420
+Elapsed time is 14.632045 seconds
+
+
+
+## --------------- With conditioning --------------------------
+c = 0.1
+
+Warning: Matrix is close to singular or badly scaled.
+         Results may be inaccurate. RCOND = 1.201314e-020. 
+> In main at 44
+No. of points(n): 351	No. of dimensions(d): 34
+No. of clusters(k): 114
+Cost ||P - UX||: 0.000
+Sparsity: 0.991
+Elapsed time is 546.475290 seconds
+
+
+## -------------------- Using U\P w/o conditioning -------------------
+Warning: Rank deficient, rank = 33,  tol =   1.4414e-013. 
+> In main at 46
+No. of points(n): 351	No. of dimensions(d): 34
+No. of clusters(k): 113
+Cost ||P - UX||: 0.000
+Sparsity: 0.265
+Elapsed time is 598.601265 seconds
+
+
+
+
+## -------------------- Using U\P w/ conditioning -------------------
+c = 0.1
+No. of points(n): 351	No. of dimensions(d): 34
+No. of clusters(k): 113
+Cost ||P - UX||: 0.000
+Sparsity: 0.287
+Elapsed time is 616.149814 seconds

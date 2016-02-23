@@ -7,7 +7,7 @@ function [p, d] = point_to_line(q, a, b)
 %   p = point closest to q on the line segment ab
 %   d = distance from q to p
 
-if norm(b-a) == 0
+if isequal(a, b)
     p = a;
     d = norm(q-a);
 else
