@@ -22,25 +22,26 @@ U(:, 1:2) = P(:, r);
 %P = P(:, [(1:r-1), (r+1:end)]);
 P(:, r) = [];
 
-dist_array = zeros(1, n);
-dist_array(1) = pdist2(P', (U(:, 1))', 'euclidean', 'Largest', 1);
+dist_array = zeros(1, n-1);
+%dist_array(1) = pdist2(P', (U(:, 1))', 'euclidean', 'Largest', 1);
 
 i = 2;
 while i < n
     [max_dist, max_index] = distance_line(U(:, 1:i), P);
-       
-    if max_dist <= epsilon
+    dist_array(i-1) = max_dist;   
+    
+    if max_dist <= epsilon        
         break
     else
         U(:, i+1) = P(:, max_index);
         P = P(:, [(1:max_index-1), (max_index+1:end)]);
-        dist_array(i+1) = max_dist;
     end
+    
     fprintf('End of iteration:%d\n', i);
     i = i + 1;
 end
 U = U(:, 1:i);
-dist_array = dist_array(1:i);
+dist_array = dist_array(1:i-1);
 
 %%% Plotting the distance as a function of the size of subset chosen
 plot(dist_array);
