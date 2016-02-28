@@ -1,7 +1,7 @@
 function [p, dist] = point_to_line(q, a, b)
 %point_to_line Returns the point (and its distance) which is closest to a
 %query point on a line segment
-%   q = query point (or matrix of points)
+%   q = query point (or matrix of points) (dxn)
 %   a = end point of line segment
 %   b = end point of line segment
 %   p = point closest to q on the line segment ab

@@ -11,22 +11,20 @@ tic;
 [~, k] = size(U); % Number of [dimensions, points]
 n = size(P, 2); % Number of points
 
-closest_lineseg_dist = zeros(1, n);
+lin_seg_count = k*(k-1)/2;
+lineseg_dist = zeros(lin_seg_count, n);
 
-for a = 1:n
-    min_dist = Inf;
-    for b = 1:(k-1)
-        for c = (b+1):k
-            [~, temp_dist] = point_to_line(P(:, a), U(:, b), U(:, c));
-            if temp_dist < min_dist
-                min_dist = temp_dist;
-            end
-        end
+i = 0;
+for b = 1:(k-1)
+    for c = (b+1):k
+        i = i + 1;
+        [~, lineseg_dist(i, :)] = point_to_line(P, U(:, b), U(:, c));
     end
-    closest_lineseg_dist(a) = min_dist;
 end
 
-[dist, index] = max(closest_lineseg_dist);
+min_lineseg_dist = min(lineseg_dist);
+
+[dist, index] = max(min_lineseg_dist);
 toc;
 end
 
