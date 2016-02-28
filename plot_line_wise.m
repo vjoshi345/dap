@@ -22,14 +22,12 @@ U(:, 1) = P(:, r);
 P = P(:, [(1:r-1), (r+1:end)]);
 
 dist_array = zeros(1, n);
-dist_array(1) = distance_point(P, U(:, 1));
+dist_array(1) = pdist2(P', (U(:, 1))', 'euclidean', 'Largest', 1);
 
 i = 1;
 while i < n
-    [D, I] = pdist2((U(:, 1:i))', P', 'euclidean', 'Smallest', 1);
-    [max_dist, max_index] = max(D); % Max distance among the closest points
-                                    % of U from P
-     
+    [max_dist, max_index] = distance_line(U(:, 1:i), P);
+       
     if max_dist <= epsilon
         break
     else

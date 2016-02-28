@@ -23,7 +23,6 @@ U(:, 1) = P(:, r);
 P = P(:, [(1:r-1), (r+1:end)]);
 
 point_dist_array = zeros(1, n);
-%point_dist_array(1) = distance_point(P, U(:, 1));
 point_dist_array(1) = pdist2(P', (U(:, 1))', 'euclidean', 'Largest', 1);
 
 i = 1;

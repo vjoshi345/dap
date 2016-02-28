@@ -1,25 +1,33 @@
-function dist = distance_line(P, q)
-%distance_line - Calculates the farthest distance from a given query point  
-%to the set of line segments formed by a set of points (for n points "n 
-%choose 2" set of line segments)  
+function [dist, index] = distance_line(U, P)
+%distance_line - Given matrices U and P, this function gives the largest 
+%distance from points in P to the closest line segment induced by pairs of
+%points in U.  
+% U = matrix of the set of points (column vectors)
 % P = matrix of the set of points (column vectors) 
-% q = the query point (column vector)
 % dist = the evaluated distance
+% index = index of the point in P which is farthest from the closest line 
+% segments in U
+tic;
+[~, k] = size(U); % Number of [dimensions, points]
+n = size(P, 2); % Number of points
 
-max_dist = 0;
-[d, n] = size(P); % Number of [dimensions, points]
-t_0 = zeros(d, 1); % Farthest point
+closest_lineseg_dist = zeros(1, n);
 
-for i = 1:(n-1)
-	for j = (i+1):n
-		[temp_point, temp_dist] = point_to_line(q, P(:, i), P(:, j));
-		if temp_dist > max_dist
-			max_dist = temp_dist
-			t_0 = temp_point
-		end
+for a = 1:n
+    min_dist = Inf;
+    for b = 1:(k-1)
+        for c = (b+1):k
+            [~, temp_dist] = point_to_line(P(:, a), U(:, b), U(:, c));
+            if temp_dist < min_dist
+                min_dist = temp_dist;
+            end
+        end
     end
+    closest_lineseg_dist(a) = min_dist;
 end
 
-dist = max_dist;
+[dist, index] = max(closest_lineseg_dist);
+toc;
 end
+
 
