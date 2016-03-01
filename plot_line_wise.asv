@@ -5,7 +5,7 @@
 
 tic;
 % Setting Constants
-epsilon = 0.5;
+epsilon = 1;
 
 % Importing data and converting to the matrix form
 P = csvread('ionosphere_mod.csv');
@@ -16,6 +16,7 @@ Q = P; % We will manipuate P and keep a copy of it in Q for later use
 
 %%%%%%%%%%%%%%%%%% ALGORITHM-2 Line-wise max distance %%%%%%%%%%%%%%%%%%%%
 % Computing columns of U 
+%r = randi([1, n], 1, 2);
 r = randi([1, n], 1, 1);
 U = zeros(d, n);
 U(:, 1) = P(:, r);
@@ -37,18 +38,16 @@ for i = 2:n
         U(:, i) = P(:, max_index);
         P(:, max_index) = [];
         if i == n
-            dist_array(i) = 0;
-        else
-            [max_dist, max_index] = distance_line(U(:, 1:i), P);
-            dist_array(i) = max_dist;
-        end
+            dist_array(i)
+        [max_dist, max_index] = distance_line(U(:, 1:i), P);
+        dist_array(i) = max_dist;
     end
     fprintf('End of iteration:%d\n', i);
 end
 
 if flag == 1
     U = U(:, 1:(i-1));
-    dist_array  = dist_array(1:(i-1));
+    didst_array  = dist_array(1:(i-1));
 else
     U = U(:, 1:i);
     dist_array = dist_array(1:i);

@@ -7,7 +7,6 @@ epsilon = 1;
 % Importing data and converting to the matrix form
 P = csvread('ionosphere_mod.csv');
 P = P'; 
-%P = P(:, 1:50);
 [d, n] = size(P);
 
 % Computing columns of U (greedy algorithm)
