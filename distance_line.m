@@ -12,7 +12,8 @@ function [dist, index] = distance_line(U, P)
 n = size(P, 2); % Number of points
 
 if k == 1
-    [dist, index] = max(point_to_line(P, U, U));
+    [~, temp] = point_to_line(P, U, U);
+    [dist, index] = max(temp);
 else
     lin_seg_count = k*(k-1)/2;
     lineseg_dist = zeros(lin_seg_count, n); % Distance from each point to 
@@ -20,7 +21,7 @@ else
     for b = 1:(k-1)
         for c = (b+1):k
             i = i + 1;
-            lineseg_dist(i, :) = point_to_line(P, U(:, b), U(:, c));
+            [~, lineseg_dist(i, :)] = point_to_line(P, U(:, b), U(:, c));
         end
     end
 

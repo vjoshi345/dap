@@ -1,8 +1,5 @@
 % P = U*X
 % P = d*n matrix, U = d*k matrix, X = k*n matrix
-% This program plots the max distance from the subset of points (U) chosen
-% using three different algorithms as a function of the size of the subset.
-
 tic;
 % Setting Constants
 epsilon = 1;
@@ -14,17 +11,16 @@ P = P';
 
 Q = P; % We will manipuate P and keep a copy of it in Q for later use
 
-%%%%%%%%%%%%%%%%%% ALGORITHM-2 Line-wise max distance %%%%%%%%%%%%%%%%%%%%
-% Computing columns of U 
+
+%%%%%%%%%%%%%%%%%% ALGORITHM-1 Distance from convex hull %%%%%%%%%%%%%%%%%%%%
+% Computing columns of U (greedy algorithm)
 r = randi([1, n], 1, 1);
 U = zeros(d, n);
 U(:, 1) = P(:, r);
 P(:, r) = [];
 
+[max_dist, max_index] = max(distance_chull(U(:, 1), P, 100));
 dist_array = zeros(1, n);
-%dist_array(1) = pdist2(P', (U(:, 1))', 'euclidean', 'Largest', 1);
-%dist_array(1) = point_to_line(P, U(:, 1), U(:, 1));
-[max_dist, max_index] = distance_line(U(:, 1), P);
 dist_array(1) = max_dist;
 
 flag = 0;
@@ -38,7 +34,7 @@ for i = 2:n
         if i == n
             dist_array(i) = 0;
         else
-            [max_dist, max_index] = distance_line(U(:, 1:i), P);
+            [max_dist, max_index] = max(distance_chull(U(:, 1:i), P, 100));
             dist_array(i) = max_dist;
         end
     end
@@ -78,6 +74,13 @@ sparsity_coeff = nonzero_count/numel(X);
 
 % Output - saved in csv file
 output = [n, d, size(U, 2), C, sparsity_coeff, epsilon];
-dlmwrite('Output\results_line.csv', output, '-append');
+csvwrite
+csvwrite('results.csv', output, 1, 1);
+
+
+
+
+
+
 
 toc;
