@@ -4,7 +4,7 @@
 % using three different algorithms as a function of the size of the subset.
 
 tic;
-for iter = 1:1
+for iter = 2:10
     clearvars -except iter;
     % Setting Constants
     epsilon = 1;
