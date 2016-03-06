@@ -1,7 +1,7 @@
-function [dist, index] = distance_line(U, P)
-%distance_line - Given matrices U and P, this function gives the largest 
-%distance from points in P to the closest line segment induced by pairs of
-%points in U.  
+function dist = distance_line(U, P)
+%distance_line - Given matrices U and P, this function gives the distance 
+%from points in P to the closest line segment induced by pairs of points
+%in U.  
 % U = matrix of the set of points (column vectors)
 % P = matrix of the set of points (column vectors) 
 % dist = the evaluated distance
@@ -13,7 +13,8 @@ n = size(P, 2); % Number of points
 
 if k == 1
     [~, temp] = point_to_line(P, U, U);
-    [dist, index] = max(temp);
+    %[dist, index] = max(temp);
+    dist = temp;
 else
     lin_seg_count = k*(k-1)/2;
     lineseg_dist = zeros(lin_seg_count, n); % Distance from each point to 
@@ -24,10 +25,11 @@ else
             [~, lineseg_dist(i, :)] = point_to_line(P, U(:, b), U(:, c));
         end
     end
-
-    min_lineseg_dist = min(lineseg_dist, [], 1); % Vector of closest 
+    
+    dist = min(lineseg_dist, [], 1);
+    %min_lineseg_dist = min(lineseg_dist, [], 1); % Vector of closest 
                                                  % distances for each point
-    [dist, index] = max(min_lineseg_dist);
+    %[dist, index] = max(min_lineseg_dist);
 end
 end
 
