@@ -20,32 +20,54 @@ Q = P; % We will manipuate P and keep a copy of it in Q for later use
 r = randi([1, n], 1, 1);
 U = zeros(d, n);
 U(:, 1) = P(:, r);
-P = P(:, [(1:r-1), (r+1:end)]);
+%P = P(:, [(1:r-1), (r+1:end)]);
+P(:, r) = [];
 
-point_dist_array = zeros(1, n);
-point_dist_array(1) = pdist2(P', (U(:, 1))', 'euclidean', 'Largest', 1);
+dist_array = zeros(1, n);
+[D, ~] = pdist2((U(:, 1))', P', 'euclidean', 'Smallest', 1);
+[max_dist, max_index] = max(D);
+dist_array(1) = max_dist;
 
-i = 1;
-while i < n
-    [D, I] = pdist2((U(:, 1:i))', P', 'euclidean', 'Smallest', 1);
-    [max_dist, max_index] = max(D); % Max distance among the closest points
-                                    % of U from P
-     
+avg_dist_array = zeros(1, n);
+avg_dist_array(1) = mean(D);
+
+flag = 0;
+for i = 2:n
     if max_dist <= epsilon
+        flag = 1;
         break
     else
-        U(:, i+1) = P(:, max_index);
-        P = P(:, [(1:max_index-1), (max_index+1:end)]);
-        point_dist_array(i+1) = max_dist;
+        U(:, i) = P(:, max_index);
+        P(:, max_index) = [];
+        if i == n
+            dist_array(i) = 0;
+        else
+            [D, ~] = pdist2((U(:, 1:i))', P', 'euclidean', 'Smallest', 1);
+            [max_dist, max_index] = max(D);
+            dist_array(i) = max_dist;
+            avg_dist_array(i) = mean(D);
+        end
     end
     fprintf('End of iteration:%d\n', i);
-    i = i + 1;
 end
-U = U(:, 1:i);
-point_dist_array = point_dist_array(1:i);
+
+if flag == 1
+    U = U(:, 1:(i-1));
+    dist_array  = dist_array(1:(i-1));
+    avg_dist_array  = avg_dist_array(1:(i-1));
+else
+    U = U(:, 1:i);
+    dist_array = dist_array(1:i);
+    avg_dist_array  = avg_dist_array(1:i);
+end
 
 %%% Plotting the distance as a function of the size of subset chosen
-plot(point_dist_array);
+plot(dist_array);
+title(['Point-wise distance, epsilon = ' num2str(epsilon)]);
+xlabel('No. of points in U');
+hold on;
+plot(avg_dist_array, 'green');
+legend('Max dist', 'Avg dist');
 
 % Evaluate X using matrix multiplication
 P = Q; % Since P was changed in computing U, we need to reaasign
@@ -68,8 +90,8 @@ sparsity_coeff = nonzero_count/numel(X);
 % fprintf('Sparsity: %3.3f\n', sparsity_coeff);
 
 % Output - saved in csv file
-output = [n, d, size(U, 2), C, sparsity_coeff, epsilon];
-dlmwrite('Output\results_point.csv', output, '-append');
+%output = [n, d, size(U, 2), C, sparsity_coeff, epsilon];
+%dlmwrite('Output\results_point.csv', output, '-append');
 
 
 toc;
