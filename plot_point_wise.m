@@ -5,17 +5,23 @@
 
 tic;
 
-for iter = 1:1
+for iter = 1:10
     clearvars -except iter;
     % Setting Constants
-    epsilon = 1;
+    %epsilon = 1;
 
     % Importing data and converting to the matrix form
-    P = csvread('ionosphere_mod.csv');
+    P = csvread('wdbc-mod.csv'); % ----- CHANGE HERE (specify file)-
     P = P'; 
     %P = P(:, 1:50);
     [d, n] = size(P);
-
+    
+    % Choosing epsilon
+    closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
+    %epsilon = min(closest(2, :)); % Dist between closest two points
+    epsilon = mean(closest(2, :));
+    
+    
     Q = P; % We will manipuate P and keep a copy of it in Q for later use
 
     %%%%%%%%%%%%%%%%%% ALGORITHM-1 Point-wise max distance %%%%%%%%%%%%%%%%%%%%
@@ -90,7 +96,8 @@ for iter = 1:1
     xlabel('No. of points in U');
     legend('Inactive points');
     display(iter);
-    saveas(Point_wise, ['Output\Max_avg_inactive\Point-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    % ------ CHANGE HERE(specify directory)-----------
+    saveas(Point_wise, ['Output-wdbc\Max_avg_inactive\Point-wise\point_wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']); 
 
     % Evaluate X using matrix multiplication
     P = Q; % Since P was changed in computing U, we need to reaasign
@@ -114,7 +121,8 @@ for iter = 1:1
 
     % Output - saved in csv file
     output = [n, d, r, size(U, 2), C, sparsity_coeff, epsilon];
-    dlmwrite('Output\Max_avg_inactive\results_point.csv', output, '-append');
+    % ------ CHANGE HERE(specify directory)-----------
+    dlmwrite('Output-wdbc\Max_avg_inactive\Point-wise\results_point.csv', output, '-append');
 end
 
 

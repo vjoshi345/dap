@@ -1,17 +1,23 @@
 % P = U*X
 % P = d*n matrix, U = d*k matrix, X = k*n matrix
 tic;
-for iter = 2:10
+for iter = 1:1
     clearvars -except iter;
     % Setting Constants
-    epsilon = 1;
-    iterations = 10;
+    %epsilon = 1;
+    iterations = 100;
 
     % Importing data and converting to the matrix form
-    P = csvread('ionosphere_mod.csv');
+    % ----- CHANGE HERE (specify file)-
+    P = csvread('wdbc-mod.csv');
     P = P'; 
     [d, n] = size(P);
-
+    
+    % Choosing epsilon
+    closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
+    epsilon = min(closest(2, :)); % Dist between closest two points
+    %epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
+    
     Q = P; % We will manipuate P and keep a copy of it in Q for later use
 
 
@@ -86,7 +92,8 @@ for iter = 2:10
     xlabel('No. of points in U');
     legend('Inactive points', 'Location', 'NorthWest');
     display(iter);
-    saveas(Chull_wise, ['Output\Max_avg_inactive\Chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    % ------ CHANGE HERE(specify directory)-----------
+    saveas(Chull_wise, ['Output-wdbc\Max_avg_inactive\Chull-wise\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
 
 
     % Evaluate X using matrix multiplication
@@ -111,7 +118,8 @@ for iter = 2:10
 
     % Output - saved in csv file
     output = [n, d, size(U, 2), C, sparsity_coeff, epsilon, iterations];
-    dlmwrite('Output\Max_avg_inactive\results_chull.csv', output, '-append');
+    % ------ CHANGE HERE(specify directory)-----------
+    dlmwrite('Output-wdbc\Max_avg_inactive\Chull-wise\results_chull.csv', output, '-append');
 end
 
 toc;
