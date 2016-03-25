@@ -5,18 +5,19 @@ for iter = 1:1
     clearvars -except iter;
     % Setting Constants
     %epsilon = 1;
-    iterations = 100;
+    iterations = 10;
 
     % Importing data and converting to the matrix form
-    % ----- CHANGE HERE (specify file)-
+    % ----- CHANGE HERE (specify file)---------------
     P = csvread('wdbc-mod.csv');
     P = P'; 
+    %P = P(:, 1:150);
     [d, n] = size(P);
     
     % Choosing epsilon
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
-    epsilon = min(closest(2, :)); % Dist between closest two points
-    %epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
+    %epsilon = min(closest(2, :)); % Dist between closest two points
+    epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
     
     Q = P; % We will manipuate P and keep a copy of it in Q for later use
 
@@ -32,7 +33,10 @@ for iter = 1:1
     [max_dist, max_index] = max(D);
     dist_array = zeros(1, n);
     dist_array(1) = max_dist;
-
+    
+    display(D);
+    display(max_dist);
+    
     avg_dist_array = zeros(1, n);
     avg_dist_array(1) = mean(D);
 
@@ -57,6 +61,8 @@ for iter = 1:1
                 dist_array(i) = max_dist;
                 avg_dist_array(i) = mean(D);
                 count_inactive(i) = sum(D <= epsilon);
+                display(D);
+                display(max_dist);
             end
         end
         fprintf('End of iteration:%d\n', i);
