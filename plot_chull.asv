@@ -99,26 +99,12 @@ for iter = 1:1
     legend('Inactive points', 'Location', 'NorthWest');
     display(iter);
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Chull_wise, ['Output-wdbc\Heuristic\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    saveas(Chull_wise, ['Output-wdbc\Max_avg_inactive\Chull-wise\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
-    % -------- Approximating points in P with various sparsity levels -----
     dist_with_sparsity = zeros(1, d);
     for j = 1:d
         D = distance_chull(U, P, j);
-        dist_with_sparsity(j) = mean(D);
-    end
-    
-    Avg_cost = figure('visible', 'off');
-
-    plot(dist_with_sparsity);
-    title(['Avg. distance of points in P at different sparsity levels, epsilon = ' num2str(epsilon)]);
-    xlabel('Sparsity level');
-    ylabel('Avg. distance');
-    refline(0, epsilon);
-    
-    % ------ CHANGE HERE(specify directory)-----------
-    saveas(Avg_cost, ['Output-wdbc\Heuristic\Cost_with_sparsity' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
-    
+        dist_with_sparsity(j) = 
     
 %     % Evaluate X using matrix multiplication
 %     P = Q; % Since P was changed in computing U, we need to reaasign
