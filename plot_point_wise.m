@@ -41,7 +41,7 @@ for iter = 1:10
     avg_dist_array(1) = mean(D);
 
     count_inactive = zeros(1, n);
-    count_inactive(1) = sum(D <= epsilon);
+    count_inactive(1) = sum(D <= epsilon) + 1;
 
     flag = 0;
     for i = 2:n
@@ -60,7 +60,7 @@ for iter = 1:10
                 [max_dist, max_index] = max(D);
                 dist_array(i) = max_dist;
                 avg_dist_array(i) = mean(D);
-                count_inactive(i) = sum(D <= epsilon);
+                count_inactive(i) = sum(D <= epsilon) + i;
             end
         end
         fprintf('End of iteration:%d\n', i);

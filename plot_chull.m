@@ -1,7 +1,7 @@
 % P = U*X
 % P = d*n matrix, U = d*k matrix, X = k*n matrix
 tic;
-for iter = 1:1
+for iter = 1:10
     clearvars -except iter;
     % Setting Constants
     %epsilon = 1;
@@ -9,11 +9,12 @@ for iter = 1:1
 
     % Importing data and converting to the matrix form
     % ----- CHANGE HERE (specify file)---------------
-    P = csvread('wdbc-mod.csv');
+    P = csvread('ionosphere_mod.csv');
     P = P'; 
     %P = P(:, 1:150);
     [d, n] = size(P);
     
+    %iterations = d;
     % Choosing epsilon
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
     %epsilon = min(closest(2, :)); % Dist between closest two points
@@ -34,14 +35,14 @@ for iter = 1:1
     dist_array = zeros(1, n);
     dist_array(1) = max_dist;
     
-    display(D);
-    display(max_dist);
+    %display(D);
+    %display(max_dist);
     
     avg_dist_array = zeros(1, n);
     avg_dist_array(1) = mean(D);
 
     count_inactive = zeros(1, n);
-    count_inactive(1) = sum(D <= epsilon);
+    count_inactive(1) = sum(D <= epsilon) + 1;
 
     flag = 0;
     for i = 2:n
@@ -60,9 +61,8 @@ for iter = 1:1
                 [max_dist, max_index] = max(D);
                 dist_array(i) = max_dist;
                 avg_dist_array(i) = mean(D);
-                count_inactive(i) = sum(D <= epsilon);
-                display(D);
-                display(max_dist);
+                count_inactive(i) = sum(D <= epsilon) + i;
+                %display(max_dist);
             end
         end
         fprintf('End of iteration:%d\n', i);
@@ -94,12 +94,12 @@ for iter = 1:1
 
     subplot(2, 1, 2);
     plot(count_inactive);
-    title(['Count of inactive points in P (<= epsilon), epsilon = ' num2str(epsilon)]);
+    title(['Count of total inactive points in (P + U) (<= epsilon), epsilon = ' num2str(epsilon)]);
     xlabel('No. of points in U');
     legend('Inactive points', 'Location', 'NorthWest');
     display(iter);
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Chull_wise, ['Output-wdbc\Heuristic\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    saveas(Chull_wise, ['Output-iono\Heuristic\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
     % -------- Approximating points in P with various sparsity levels -----
     dist_with_sparsity = zeros(1, d);
@@ -117,7 +117,7 @@ for iter = 1:1
     refline(0, epsilon);
     
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Avg_cost, ['Output-wdbc\Heuristic\Cost_with_sparsity' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    saveas(Avg_cost, ['Output-iono\Heuristic\Cost_with_sparsity' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
     
 %     % Evaluate X using matrix multiplication
