@@ -9,7 +9,7 @@ for iter = 1:10
 
     % Importing data and converting to the matrix form
     % ----- CHANGE HERE (specify file)---------------
-    P = csvread('ionosphere_mod.csv');
+    P = csvread('wdbc-mod.csv');
     P = P'; 
     %P = P(:, 1:150);
     [d, n] = size(P);
@@ -31,6 +31,7 @@ for iter = 1:10
     P(:, r) = [];
 
     D = distance_chull(U(:, 1), P, iterations);
+    %D = distance_chull_perceptron(U(:, 1), P, iterations);
     [max_dist, max_index] = max(D);
     dist_array = zeros(1, n);
     dist_array(1) = max_dist;
@@ -58,11 +59,12 @@ for iter = 1:10
                 count_inactive(i) = n;
             else
                 D = distance_chull(U(:, 1:i), P, iterations);
+                %D = distance_chull_perceptron(U(:, 1:i), P, iterations);
                 [max_dist, max_index] = max(D);
                 dist_array(i) = max_dist;
                 avg_dist_array(i) = mean(D);
                 count_inactive(i) = sum(D <= epsilon) + i;
-                %display(max_dist);
+                
             end
         end
         fprintf('End of iteration:%d\n', i);
@@ -99,13 +101,18 @@ for iter = 1:10
     legend('Inactive points', 'Location', 'NorthWest');
     display(iter);
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Chull_wise, ['Output-iono\Heuristic\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    saveas(Chull_wise, ['Output-wdbc\Heuristic\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
     % -------- Approximating points in P with various sparsity levels -----
     dist_with_sparsity = zeros(1, d);
+    sparsity_level = Inf;
     for j = 1:d
         D = distance_chull(U, P, j);
+        %D = distance_chull_perceptron(U, P, j);
         dist_with_sparsity(j) = mean(D);
+        if mean(D) <= epsilon && sparsity_level == Inf
+            sparsity_level = j;
+        end
     end
     
     Avg_cost = figure('visible', 'off');
@@ -117,8 +124,15 @@ for iter = 1:10
     refline(0, epsilon);
     
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Avg_cost, ['Output-iono\Heuristic\Cost_with_sparsity' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    saveas(Avg_cost, ['Output-wdbc\Heuristic\Cost_with_sparsity' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
+    % ------ Computing sparsity coeff and cost and storing results --------
+    C = dist_with_sparsity(sparsity_level);
+    k = size(U, 2);
+    sparsity_coeff = (k + (n-k)*sparsity_level)/(n*k);
+    output = [n, d, epsilon, k, sparsity_level, sparsity_coeff, C];
+    % ------ CHANGE HERE(specify directory)-----------
+    dlmwrite('Output-wdbc\Heuristic\savings.csv', output, '-append');
     
 %     % Evaluate X using matrix multiplication
 %     P = Q; % Since P was changed in computing U, we need to reaasign
