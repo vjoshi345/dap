@@ -5,21 +5,21 @@
 
 tic;
 
-for iter = 1:10
+for iter = 1:1
     clearvars -except iter;
     % Setting Constants
-    epsilon = iter;
+    %epsilon = iter;
 
     % Importing data and converting to the matrix form
-    P = csvread('ionosphere_mod.csv'); % ----- CHANGE HERE (specify file)-
+    P = csvread('CTG-mod.csv'); % ----- CHANGE HERE (specify file)-
     P = P'; 
     %P = P(:, 1:50);
     [d, n] = size(P);
     
     % Choosing epsilon
-    %closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
+    closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
     %epsilon = min(closest(2, :)); % Dist between closest two points
-    %epsilon = mean(closest(2, :));
+    epsilon = mean(closest(2, :)); % Avg dist between closest pair of points
     
     
     Q = P; % We will manipuate P and keep a copy of it in Q for later use
@@ -97,32 +97,41 @@ for iter = 1:10
     legend('Inactive points');
     display(iter);
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Point_wise, ['Output-iono\Max_avg_inactive\Point-wise\point_wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']); 
-
-    % Evaluate X using matrix multiplication
-    P = Q; % Since P was changed in computing U, we need to reaasign
-    c = 0.1;
-    U = U + c*eye(size(U));
-    X = U\P;
-
-    % Cost (Frobenius norm) ||P - U*X||^2 
-    C = norm((P - U*X), 'fro');
-
-    % Sparsity
-    nonzero_count = sum(sum(abs(X) > 1e-5));
-    sparsity_coeff = nonzero_count/numel(X);
-
-    % % Output
-    % fprintf('No. of points(n): %d\t', n);
-    % fprintf('No. of dimensions(d): %d\n', d);
-    % fprintf('No. of clusters(k): %d\n', size(U, 2));
-    % fprintf('Cost ||P - UX||: %3.3f\n', C);
-    % fprintf('Sparsity: %3.3f\n', sparsity_coeff);
-
-    % Output - saved in csv file
-    output = [n, d, r, size(U, 2), C, sparsity_coeff, epsilon];
+    saveas(Point_wise, ['Output-CTG\Point-wise\point_wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']); 
+    
+    % ------ Computing sparsity coeff and cost and storing results --------
+    C = avg_dist_array(end);
+    k = size(U, 2);
+    sparsity_level = 1; % Since this is the point-wise algorithm
+    sparsity_coeff = (k + (n-k)*sparsity_level)/(n*k);
+    output = [n, d, epsilon, k, sparsity_level, sparsity_coeff, C];
     % ------ CHANGE HERE(specify directory)-----------
-    dlmwrite('Output-iono\Max_avg_inactive\Point-wise\results_point.csv', output, '-append');
+    dlmwrite('Output-CTG\Point-wise\savings.csv', output, '-append');
+    
+%     % Evaluate X using matrix multiplication
+%     P = Q; % Since P was changed in computing U, we need to reaasign
+%     c = 0.1;
+%     U = U + c*eye(size(U));
+%     X = U\P;
+% 
+%     % Cost (Frobenius norm) ||P - U*X||^2 
+%     C = norm((P - U*X), 'fro');
+% 
+%     % Sparsity
+%     nonzero_count = sum(sum(abs(X) > 1e-5));
+%     sparsity_coeff = nonzero_count/numel(X);
+% 
+%     % % Output
+%     % fprintf('No. of points(n): %d\t', n);
+%     % fprintf('No. of dimensions(d): %d\n', d);
+%     % fprintf('No. of clusters(k): %d\n', size(U, 2));
+%     % fprintf('Cost ||P - UX||: %3.3f\n', C);
+%     % fprintf('Sparsity: %3.3f\n', sparsity_coeff);
+% 
+%     % Output - saved in csv file
+%     output = [n, d, r, size(U, 2), C, sparsity_coeff, epsilon];
+%     % ------ CHANGE HERE(specify directory)-----------
+%     dlmwrite('Output-iono\Max_avg_inactive\Point-wise\results_point.csv', output, '-append');
 end
 
 

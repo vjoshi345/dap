@@ -1,20 +1,20 @@
 % P = U*X
 % P = d*n matrix, U = d*k matrix, X = k*n matrix
 tic;
-for iter = 1:10
+for iter = 1:1
     clearvars -except iter;
     % Setting Constants
     %epsilon = 1;
-    iterations = 10;
+    %iterations = 10;
 
     % Importing data and converting to the matrix form
     % ----- CHANGE HERE (specify file)---------------
-    P = csvread('wdbc-mod.csv');
+    P = csvread('CTG-mod.csv');
     P = P'; 
     %P = P(:, 1:150);
     [d, n] = size(P);
     
-    %iterations = d;
+    iterations = d;
     % Choosing epsilon
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
     %epsilon = min(closest(2, :)); % Dist between closest two points
@@ -30,8 +30,8 @@ for iter = 1:10
     U(:, 1) = P(:, r);
     P(:, r) = [];
 
-    D = distance_chull(U(:, 1), P, iterations);
-    %D = distance_chull_perceptron(U(:, 1), P, iterations);
+    %D = distance_chull(U(:, 1), P, iterations);
+    D = distance_chull_perceptron(U(:, 1), P, iterations);
     [max_dist, max_index] = max(D);
     dist_array = zeros(1, n);
     dist_array(1) = max_dist;
@@ -58,8 +58,8 @@ for iter = 1:10
                 avg_dist_array(i) = 0;
                 count_inactive(i) = n;
             else
-                D = distance_chull(U(:, 1:i), P, iterations);
-                %D = distance_chull_perceptron(U(:, 1:i), P, iterations);
+                %D = distance_chull(U(:, 1:i), P, iterations);
+                D = distance_chull_perceptron(U(:, 1:i), P, iterations);
                 [max_dist, max_index] = max(D);
                 dist_array(i) = max_dist;
                 avg_dist_array(i) = mean(D);
@@ -101,7 +101,7 @@ for iter = 1:10
     legend('Inactive points', 'Location', 'NorthWest');
     display(iter);
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Chull_wise, ['Output-wdbc\Heuristic\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    saveas(Chull_wise, ['Output-CTG\Perceptron\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
     % -------- Approximating points in P with various sparsity levels -----
     dist_with_sparsity = zeros(1, d);
@@ -124,7 +124,7 @@ for iter = 1:10
     refline(0, epsilon);
     
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Avg_cost, ['Output-wdbc\Heuristic\Cost_with_sparsity' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    saveas(Avg_cost, ['Output-CTG\Perceptron\Cost_with_sparsity' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
     % ------ Computing sparsity coeff and cost and storing results --------
     C = dist_with_sparsity(sparsity_level);
@@ -132,7 +132,7 @@ for iter = 1:10
     sparsity_coeff = (k + (n-k)*sparsity_level)/(n*k);
     output = [n, d, epsilon, k, sparsity_level, sparsity_coeff, C];
     % ------ CHANGE HERE(specify directory)-----------
-    dlmwrite('Output-wdbc\Heuristic\savings.csv', output, '-append');
+    dlmwrite('Output-CTG\Perceptron\savings.csv', output, '-append');
     
 %     % Evaluate X using matrix multiplication
 %     P = Q; % Since P was changed in computing U, we need to reaasign
