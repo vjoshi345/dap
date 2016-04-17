@@ -11,7 +11,7 @@ for iter = 1:1
     %epsilon = iter;
 
     % Importing data and converting to the matrix form
-    file_name = 'CTG'; % ----- CHANGE HERE (specify file)-------------
+    file_name = 'wdbc'; % ----- CHANGE HERE (specify file)-------------
     P = csvread([file_name '-mod.csv']); 
     P = P'; 
     %P = P(:, 1:50);
@@ -99,19 +99,12 @@ for iter = 1:1
     
     % ------- Plotting the average error as a function of memory used -----
     k = size(U, 2);
-    memory = (1:k)*(d-1) + n;
-    Memory_plot = figure('visible', 'off');
-    plot(memory, dist_array);
-    title(['Error vs Memory Point-wise, epsilon = ' num2str(epsilon)]);
-    xlabel('Memory');
-    hold on;
-    plot(memory, avg_dist_array, 'green');
-    legend('Max dist', 'Avg dist');
-    hold off;
+    memory = zeros(1, k);
+    (1:k)*(
+    
     
     % ------ CHANGE HERE(specify directory)-----------
     saveas(Point_wise, ['Output-' file_name '\Point-wise\point_wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']); 
-    saveas(Memory_plot, ['Output-' file_name '\Point-wise\memory' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']); 
     
     % ------ Computing sparsity coeff and cost and storing results --------
     C = avg_dist_array(end);
@@ -119,15 +112,8 @@ for iter = 1:1
     sparsity_level = 1; % Since this is the point-wise algorithm
     sparsity_coeff = (k + (n-k)*sparsity_level)/(n*k);
     output = [n, d, epsilon, k, sparsity_level, sparsity_coeff, C];
-    
-    memory_initial = n*d;
-    memory_final = memory(end);
-    compression_ratio = memory_final/memory_initial;
-    memory_output = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sparsity_level, sparsity_coeff, C];
     % ------ CHANGE HERE(specify directory)-----------
     dlmwrite(['Output-' file_name '\Point-wise\savings.csv'], output, '-append');
-    
-    dlmwrite(['Output-' file_name '\Point-wise\memory.csv'], memory_output, '-append');
     
     display(iter);
 %     % Evaluate X using matrix multiplication

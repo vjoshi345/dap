@@ -12,7 +12,7 @@ for iter = 1:10
 
     % Importing data and converting to the matrix form
     % ----- CHANGE HERE (specify file)---------------
-    file_name = 'wdbc';
+    file_name = 'CTG';
     P = csvread([file_name '-mod.csv']);
     P = P'; 
     %P = P(:, 1:150);
