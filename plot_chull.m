@@ -1,7 +1,7 @@
 % P = U*X
 % P = d*n matrix, U = d*k matrix, X = k*n matrix
 tic;
-for iter = 1:10
+for iter = 1:1
     clearvars -except iter;
     % Set seed (do this if you want to choose the same initial point) -----
     rng(0);
@@ -106,9 +106,12 @@ for iter = 1:10
     title(['Count of total inactive points in (P + U) (<= epsilon), epsilon = ' num2str(epsilon)]);
     xlabel('No. of points in U');
     legend('Inactive points', 'Location', 'NorthWest');
-    display(iter);
+    
+    
+        
     % ------ CHANGE HERE(specify directory)-----------
     saveas(Chull_wise, ['Output-' file_name '\Heuristic\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    
     
     % -------- Approximating points in P with various sparsity levels -----
     dist_with_sparsity = zeros(1, d);
@@ -133,13 +136,34 @@ for iter = 1:10
     % ------ CHANGE HERE(specify directory)-----------
     saveas(Avg_cost, ['Output-' file_name '\Heuristic\Cost_with_sparsity' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
+    % ------- Plotting the average error as a function of memory used -----
+    k = size(U, 2);
+    memory = (1:k)*(d-2*sparsity_level + 1) + (2*sparsity_level - 1)*n;
+    Memory_plot = figure('visible', 'off');
+    plot(memory, dist_array);
+    title(['Error vs Memory Chull-wise Heuristic, epsilon = ' num2str(epsilon)]);
+    xlabel('Memory');
+    hold on;
+    plot(memory, avg_dist_array, 'green');
+    legend('Max dist', 'Avg dist');
+    hold off;
+    saveas(Memory_plot, ['Output-' file_name '\Heuristic\chull-wise-memory' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']); 
+    
     % ------ Computing sparsity coeff and cost and storing results --------
     C = dist_with_sparsity(sparsity_level);
     k = size(U, 2);
     sparsity_coeff = (k + (n-k)*sparsity_level)/(n*k);
     output = [n, d, epsilon, k, sparsity_level, sparsity_coeff, C];
+    
+    memory_initial = n*d;
+    memory_final = memory(end);
+    compression_ratio = memory_final/memory_initial;
+    memory_output = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sparsity_level, sparsity_coeff, C];
     % ------ CHANGE HERE(specify directory)-----------
     dlmwrite(['Output-' file_name '\Heuristic\savings.csv'], output, '-append');
+    dlmwrite(['Output-' file_name '\Heuristic\memory.csv'], memory_output, '-append');
+    
+    display(iter);
     
 %     % Evaluate X using matrix multiplication
 %     P = Q; % Since P was changed in computing U, we need to reaasign
