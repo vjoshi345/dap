@@ -8,7 +8,7 @@ for iter = 1:1
     
     % Setting Constants
     %epsilon = 1;
-    iterations = 10;
+    %iterations = 10;
 
     % Importing data and converting to the matrix form
     % ----- CHANGE HERE (specify file)---------------
@@ -18,7 +18,7 @@ for iter = 1:1
     %P = P(:, 1:150);
     [d, n] = size(P);
     
-    %iterations = d;
+    iterations = d;
     
     % Choosing epsilon
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
@@ -37,8 +37,8 @@ for iter = 1:1
     U(:, 1) = P(:, r);
     P(:, r) = [];
 
-    D = distance_chull(U(:, 1), P, iterations);
-    %D = distance_chull_perceptron(U(:, 1), P, iterations);
+    %D = distance_chull(U(:, 1), P, iterations);
+    D = distance_chull_perceptron(U(:, 1), P, iterations);
     [max_dist, max_index] = max(D);
     dist_array = zeros(1, n);
     dist_array(1) = max_dist;
@@ -65,8 +65,8 @@ for iter = 1:1
                 avg_dist_array(i) = 0;
                 count_inactive(i) = n;
             else
-                D = distance_chull(U(:, 1:i), P, iterations);
-                %D = distance_chull_perceptron(U(:, 1:i), P, iterations);
+                %D = distance_chull(U(:, 1:i), P, iterations);
+                D = distance_chull_perceptron(U(:, 1:i), P, iterations);
                 [max_dist, max_index] = max(D);
                 dist_array(i) = max_dist;
                 avg_dist_array(i) = mean(D);
@@ -110,15 +110,15 @@ for iter = 1:1
     
         
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Chull_wise, ['Output-' file_name '\Heuristic\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    saveas(Chull_wise, ['Output-' file_name '\Perceptron\chull-wise' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
     
     % -------- Approximating points in P with various sparsity levels -----
     dist_with_sparsity = zeros(1, d);
     sparsity_level = Inf;
     for j = 1:d
-        D = distance_chull(U, P, j);
-        %D = distance_chull_perceptron(U, P, j);
+        %D = distance_chull(U, P, j);
+        D = distance_chull_perceptron(U, P, j);
         dist_with_sparsity(j) = mean(D);
         if mean(D) <= epsilon && sparsity_level == Inf
             sparsity_level = j;
@@ -134,20 +134,20 @@ for iter = 1:1
     refline(0, epsilon);
     
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Avg_cost, ['Output-' file_name '\Heuristic\Cost_with_sparsity' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    saveas(Avg_cost, ['Output-' file_name '\Perceptron\Cost_with_sparsity' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
     % ------- Plotting the average error as a function of memory used -----
     k = size(U, 2);
-    memory = (1:k)*(d-2*sparsity_level + 1) + (2*iterations - 1)*n;
+    memory = (1:k)*(d-2*sparsity_level + 1) + (2*sparsity_level - 1)*n;
     Memory_plot = figure('visible', 'off');
     plot(memory, dist_array);
-    title(['Error vs Memory Chull-wise Heuristic, epsilon = ' num2str(epsilon)]);
+    title(['Error vs Memory Chull-wise Perceptron, epsilon = ' num2str(epsilon)]);
     xlabel('Memory');
     hold on;
     plot(memory, avg_dist_array, 'green');
     legend('Max dist', 'Avg dist');
     hold off;
-    saveas(Memory_plot, ['Output-' file_name '\Heuristic\chull-wise-memory' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']); 
+    saveas(Memory_plot, ['Output-' file_name '\Perceptron\chull-wise-memory' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']); 
     
     % ------ Computing sparsity coeff and cost and storing results --------
     C = dist_with_sparsity(sparsity_level);
@@ -160,7 +160,7 @@ for iter = 1:1
     compression_ratio = memory_final/memory_initial;
     memory_output = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sparsity_level, sparsity_coeff, C];
     % ------ CHANGE HERE(specify directory)-----------
-    dlmwrite(['Output-' file_name '\Heuristic\savings.csv'], output, '-append');
+    dlmwrite(['Output-' file_name '\PerceHeuristic\savings.csv'], output, '-append');
     dlmwrite(['Output-' file_name '\Heuristic\memory.csv'], memory_output, '-append');
     
     display(iter);
