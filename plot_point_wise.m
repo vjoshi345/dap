@@ -11,7 +11,7 @@ for iter = 1:1
     %epsilon = iter;
 
     % Importing data and converting to the matrix form
-    file_name = 'line-data'; % ----- CHANGE HERE (specify file)-------------
+    file_name = '10line-data'; % ----- CHANGE HERE (specify file)-------------
     P = csvread([file_name '-mod.csv']); 
     P = P'; 
     %P = P(:, 1:50);

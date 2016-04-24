@@ -11,7 +11,7 @@ for iter = 1:1
 
     % Importing data and converting to the matrix form
     % ----- CHANGE HERE (specify file)-
-    file_name = 'line-data';
+    file_name = '10line-data';
     P = csvread([file_name '-mod.csv']);
     P = P'; 
     [d, n] = size(P);
