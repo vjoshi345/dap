@@ -2,7 +2,7 @@
 % P = d*n matrix, U = d*k matrix, X = k*n matrix
 % This program plots the max distance from the subset of points (U) chosen
 % using three different algorithms as a function of the size of the subset.
-
+rng(120);
 tic;
 for iter = 1:1
     clearvars -except iter;

@@ -1,1 +1,2 @@
+No. of points(n), No. of dimensions(d), Epsilon, Size of subset(points in U), Initial memory, Final memory, Compression Ratio, Sparsity for points not in U, Sparsity coeff, Avg.Cost
 1000,10,0.012363,236,10000,3124,0.3124,1,0.0042373,0.010368
