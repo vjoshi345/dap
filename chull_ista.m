@@ -12,7 +12,7 @@ for iter = 1:1
 
     % Importing data and converting to the matrix form
     % ----- CHANGE HERE (specify file)---------------
-    file_name = 'iono';
+    file_name = 'CTG';
     P = csvread([file_name '-mod.csv']);
     P = P'; 
     %P = P(:, 1:150);
@@ -25,7 +25,7 @@ for iter = 1:1
     %epsilon = min(closest(2, :)); % Dist between closest two points
     epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
     
-    epsilon = (iter+1)*epsilon/2; % Multiplying epsilon to get results for different values
+    %epsilon = (iter+1)*epsilon/2; % Multiplying epsilon to get results for different values
     
     Q = P; % We will manipuate P and keep a copy of it in Q for later use
 
@@ -110,29 +110,36 @@ for iter = 1:1
     
         
     % ------ CHANGE HERE(specify directory)-----------
-    saveas(Chull_wise, ['Output-' file_name '\Chull-ista\chull-ista1' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
+    saveas(Chull_wise, ['Output-' file_name '\Chull-ista\dict_learn' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
     % -------------------------- SPARSE CODING ----------------------------
     P = Q; % reassigning Q to P to get back the original matrix
     k = size(U, 2);
+ 
+    %------------- ISTA/LASSO algorithm for sparse coding -----------------------
+    error = zeros(1, 5);
+    sparsity = zeros(1, 5);
+    cost_func = zeros(1, 5);
+    sparsity_coeff = zeros(1, 5);
+    tau = zeros(1, 5);
     
-    error = zeros(1, 100);
-    sparsity = zeros(1, 100);
-    cost_func = zeros(1, 100);
-    sparsity_coeff = zeros(1, 100);
-    tau = zeros(1, 100);
-    
-    for j = 1:100
-        tau(j) = 0.01*j;
+    for j = 1:5
+        tau(j) = 0.5*j;
         X = zeros(k, n);
     
-        for i = 1:n
-            [x, ~] = TwIST(P(:, i), U, tau(j), 'Phi', @(n) sum(abs(n)));
-            X(:, i) = x;
-        end
+%         % ISTA for sparse coding
+%         for i = 1:n
+%             [x, ~] = TwIST(P(:, i), U, tau(j), 'Phi', @(n) sum(abs(n)));
+%             X(:, i) = x;
+%         end
         
-        %[X, ~] = TwIST(P, U, tau(j));
-        error(j) = 0.5*norm(P - U*X, 'fro');
+        % LASSO for sparse coding
+        for i = 1:n
+            [x, fit_info] = lasso(U, P(:, i), 'Lambda', tau(j));    
+            X(:, i) = x';
+        end
+               
+        error(j) = norm(P - U*X, 'fro');
         sparsity(j) = tau(j)*sum(sum(abs(X), 1)); % Using the L1-norm as a sparsity measure
         cost_func(j) = error(j) + sparsity(j);
         
@@ -142,26 +149,25 @@ for iter = 1:1
         memory_final = d*k + nnz(X);
         compression_ratio = memory_final/memory_initial;
         
-        results = [n, d, epsilon, tau(j), k, error(j), sparsity(j), cost_func(j), sparsity_coeff(j), memory_initial, memory_final, compression_ratio];
-        dlmwrite(['Output-' file_name '\Chull-ista\results1.csv'], results, '-append');
-    end
-           
+        results = [n, d, epsilon, tau(j), k, error(j), sparsity_coeff(j), sparsity(j), cost_func(j), memory_initial, memory_final, compression_ratio];
+        dlmwrite(['Output-' file_name '\Chull-lasso\results.csv'], results, '-append');
         
-    Chull_loss = figure('visible', 'off');
-
-    plot(tau, error);
-    title(['Loss function vs regularization (tau), epsilon = ' num2str(epsilon)]);
-    xlabel('Regularization parameter (tau)');    
-    hold on;
-    plot(tau, sparsity, 'green');
-    hold on;
-    plot(tau, cost_func, 'red');
-    legend('Reconstruction error', 'Sparsity', 'Loss function');
-    hold off;   
+        display(['iter:' j]);
+    end
     
-    % ------ CHANGE HERE(specify directory)-----------
-    saveas(Chull_loss, ['Output-' file_name '\Chull-ista\chull-ista_lossfunc1' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
-       
+    Chull_wise = figure('visible', 'off');
+    
+    subplot(2, 1, 1);
+    plot(tau, error);
+    title(['Reconstruction Error Chull LASSO, epsilon = ' num2str(epsilon)]);
+    xlabel('Regularization parameter (tau)');
+    
+    subplot(2, 1, 2);
+    plot(tau, sparsity_coeff, 'green');
+    title(['Sparsity Chull LASSO, epsilon = ' num2str(epsilon)]);
+    xlabel('Regularization parameter (tau)');
+    
+    saveas(Chull_wise, ['Output-' file_name '\Chull-lasso\sparse_coding' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
     
 %     % -------- Approximating points in P with various sparsity levels -----
 %     dist_with_sparsity = zeros(1, d);
