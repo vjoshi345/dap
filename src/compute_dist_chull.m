@@ -3,14 +3,13 @@ function [dist] = compute_dist_chull(P, q, niter)
 % to the convex hull of a set of points.
 %
 %   INPUT: 
-%   P     - matrix of the set of points (as column vectors) which form
-%                the convex hull.
-%   q     - matrix of query points represented as column vectors.
-%   niter - number of iterations to get approximate distance to convex
-%                hull.
+%   P     - matrix of the set of points (as column vectors) which form the
+%           convex hull
+%   q     - matrix of query points represented as column vectors
+%   niter - no. of iterations to get approximate distance to convex hull
 %
 %   OUTPUT:
-%   dist - the vector of evaluated distances.
+%   dist - the vector of evaluated distances
 %   
 %   TODO:
 %   Get rid of the for loop at the end. Requires changing the compute_dist_
