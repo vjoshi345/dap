@@ -5,8 +5,9 @@ function [U, dist_array, avg_dist_array, count_inactive] = dch(P, method_id, eps
 %   INPUT:
 %   P          - the input dataset as a matrix with columns as datapoints 
 %                and rows as dimensions
-%   epsilon    - error tolerance for each datapoint
-%   iterations - number of iterations to compute distance to convex hull
+%   epsilon    - error tolerance for each datapoint (optional)
+%   iterations - no. of iterations to compute distance to convex hull
+%                (optional)
 %   method_id  - numeric value specifying the method used to compute 
 %                distance to convex hull
 %   
