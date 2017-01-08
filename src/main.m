@@ -1,37 +1,43 @@
-function [] = main(file_name, algorithm_id, epsilon)
+function [] = main(data_path, algorithm_id, epsilon)
 % MAIN Function to perform dictionary learning on a dataset with a user
 % specified algorithm.
 %
 %   INPUT:
-%   file_name    - full path to the dataset stored as a .csv or .mat file
+%   data_path    - full path to the dataset stored as a .csv or .mat file
 %   algorithm_id - algorithm to perform dictionary learning (specified as a
 %                  number)
 %                  1 - distance from points
 %                  2 - distance from line segments
 %                  3 - distance from convex hull
-%                  4 - distane from convex hull (perceptron method)
+%                  4 - distance from convex hull (perceptron method)
 %   epsilon      - optional argument specifying the error tolerance
 %
 %   OUTPUT:
 %   No variables returned. Summary statistics are plotted and saved.
 %
-clearvars;
 rng(0);
 
-P = csvread(file_name);
+P = csvread(data_path);
+P = P';
+[~, file_name, ~] = fileparts(data_path);
+display(['Dataset name:' file_name]);
+display(['No. of points(n):' num2str(size(P, 2))]);
+display(['No. of dimensions(d):' num2str(size(P, 1))]);
+
 if nargin < 3
     % Choosing epsilon
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
     %epsilon = min(closest(2, :)); % Dist between closest two points
     epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
 end
+display(['Error tolerance (epsilon)=' num2str(epsilon)]);
 
 algorithm_list = {@dp, @dl, @dch, @dch};
 algorithm = algorithm_list{algorithm_id};
 
 switch algorithm_id
     case 1 | 2
-        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, epsilon);
+        [selected, sparse_code, dist_array, avg_dist_array, count_inactive] = algorithm(P, epsilon);
         algorithm_name = func2str(algorithm);
     case 3
         [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 1, epsilon);
@@ -43,13 +49,15 @@ switch algorithm_id
         disp('Incorrect input');
         return        
 end
+display(['Algorithm chosen:' algorithm_name]);
 
 % Plot and save distance as a function of the size of subset chosen
 distance_figure = figure('visible', 'off');
+%distance_figure = figure();
 
 subplot(2, 1, 1);
 plot(dist_array);
-title([file_name '_' algorithm_name '_distance_epsilon=' num2str(epsilon)]);
+title([file_name '\_' algorithm_name '\_distance\_epsilon=' num2str(epsilon)]);
 xlabel('No. of points in U');
 hold on;
 plot(avg_dist_array, 'green');

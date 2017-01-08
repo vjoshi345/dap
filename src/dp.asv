@@ -22,6 +22,7 @@ function [selected, sparse_code, dist_array, avg_dist_array, count_inactive] = d
 %
 
 [~, n] = size(P);
+
 % Choose epsilon if argument is missing 
 if nargin < 2
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
@@ -86,11 +87,12 @@ else
     avg_dist_array  = avg_dist_array(1:i);
     count_inactive = count_inactive(1:i);
 end
+blah = 1:n;
+blah = blah(selected);
 
-% Generate the sparse code
-selected_index_array = 1:n;
-selected_index_array = selected_index_array(selected);
-sparse_code(not_selected) = selected_index_array(I);
+sparse_code(not_selected) = blah(I);
+
+
 
 %     %%% Plotting the distance as a function of the size of subset chosen
 %     Point_wise = figure('visible', 'off');
