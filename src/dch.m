@@ -20,6 +20,9 @@ function [U, dist_array, avg_dist_array, count_inactive] = dch(P, method_id, eps
 %   count_inactive - number of points within distance epsilon from the
 %                    convex-hull of the dictionary at each iteration
 %   
+%   TODO:
+%   Modify this code to return the sparse code in addition to the learned
+%   dictionary.
 
 tic;
 %for iter = 1:1

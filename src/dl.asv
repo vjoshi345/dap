@@ -8,7 +8,8 @@ function [U, dist_array, avg_dist_array, count_inactive] = dl(P, epsilon)
 %   epsilon - error tolerance for each datapoint
 %
 %   OUTPUT:
-%   U              - the dictionary learned by the algorithm as a matrix
+%   selected       - the index of atoms selected in the dictionary (vector)
+%   sparse_code    - 
 %   dist_array     - distance of farthest point from the pairs of line
 %                    segments induced by dictionary atoms at each iteration
 %                    of the algorithm
@@ -18,10 +19,6 @@ function [U, dist_array, avg_dist_array, count_inactive] = dl(P, epsilon)
 %   count_inactive - number of points within distance epsilon from the
 %                    pairs of line-segments of the dictionary atoms at each
 %                    iteration of the algorithm
-%
-%   TODO:
-%   Modify this function to return the sparse code learned in addition to
-%   the dictionary.
 %
 % P = U*X
 % P = d*n matrix, U = d*k matrix, X = k*n matrix
