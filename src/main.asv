@@ -19,7 +19,7 @@ rng(0);
 
 P = csvread(data_path);
 P = P';
-[n, d] = size(P);
+[d, n] = size(P);
 [~, file_name, ~] = fileparts(data_path);
 display(['Dataset name:' file_name]);
 display(['No. of points(n):' num2str(n)]);
@@ -38,26 +38,33 @@ algorithm = algorithm_list{algorithm_id};
 
 switch algorithm_id
     case 1
-        [selected, sparse_code, dist_array, avg_dist_array, count_inactive] = algorithm(P, epsilon);
         algorithm_name = func2str(algorithm);
+        display(['Algorithm chosen:' algorithm_name]);
+        [selected, ~, dist_array, avg_dist_array, count_inactive] = algorithm(P, epsilon);        
+        U = P(:, selected);
     case 2
-        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, epsilon);
         algorithm_name = func2str(algorithm);
+        display(['Algorithm chosen:' algorithm_name]);
+        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, epsilon);        
     case 3
-        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 1, epsilon);
         algorithm_name = func2str(algorithm);
+        display(['Algorithm chosen:' algorithm_name]);
+        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 1, epsilon);        
     case 4
-        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 2, epsilon);
         algorithm_name = [func2str(algorithm) 'perceptron'];
+        display(['Algorithm chosen:' algorithm_name]);
+        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 2, epsilon);        
     otherwise
         disp('Incorrect input');
         return
 end
-display(['Algorithm chosen:' algorithm_name]);
 
-% Plot and save distance as a function of the size of subset chosen
+k = size(U, 2);
+disp(['Size of dictionary leanred:' num2str(k)]);
+
+% Plot and save distance (max and average) as a function of the size of 
+% the dictionary size
 distance_figure = figure('visible', 'off');
-%distance_figure = figure();
 
 subplot(2, 1, 1);
 plot(dist_array);
@@ -76,48 +83,59 @@ legend('Inactive points', 'Location', 'NorthWest');
 
 saveas(distance_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_distance_epsilon=' num2str(epsilon) '.jpg']);
 
-
-% Get the sparsity level when @dch is used. Note that for @dp and @dl,
-% sparsity level is one and two respectively
+% Get the sparsity level when @dch is used and plot the average distance vs
+% sparsity level. Note that for @dp and @dl, sparsity level is one and two 
+% respectively.
+method_list = {[], [], @compute_dist_chull, @compute_dist_chull_perceptron};
+method = method_list{algorithm_id};
 switch algorithm_id
     case 1
         sparsity_level = 1;
+        memory_final = k*(d-1) + n;
     case 2
         sparsity_level = 2;
-    case 3
-        dist_with_sparsity = zeros(1, d);
+        memory_final = k*(d-3) + 3*n;
+    otherwise
+        avg_dist_with_sparsity = zeros(1, d);
         sparsity_level = Inf;
         for j = 1:d
-            D = compute_dist_chull(U, P, j);
-            dist_with_sparsity(j) = mean(D);
+            disp(['Sparsity iteration:' num2str(j)]);
+            D = method(U, P, j);
+            avg_dist_with_sparsity(j) = mean(D);
             if mean(D) <= epsilon && sparsity_level == Inf
                 sparsity_level = j;
             end
         end
-        sparsity_level = d;
-    case 4
-%         dist_with_sparsity = zeros(1, d);
-%         sparsity_level = Inf;
-%         for j = 1:d
-%             D = compute_dist_chull_perceptron(U, P, j);
-%             dist_with_sparsity(j) = mean(D);
-%             if mean(D) <= epsilon && sparsity_level == Inf
-%                 sparsity_level = j;
-%             end
-%         end
-        sparsity_level = d;
-    otherwise
-        disp('Incorrect input');
-        return
-end
+        avg_dist_vs_sparsity_figure = figure('visible', 'off');
+        plot(avg_dist_with_sparsity);
+        title([file_name '\_' algorithm_name '\_avgdistance\_vs\_sparsity\_epsilon=' num2str(epsilon)]);
+        xlabel('Sparsity level');
+        ylabel('Avg. distance (error)');
+        refline(0, epsilon);
+        saveas(avg_dist_vs_sparsity_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_avgdistance_vs_sparsity_epsilon=' num2str(epsilon) '.jpg']);
+        if algorithm_id == 3
+            memory_final = k*d + (2*sparsity_level-1)*(n-k);
+        end
+        if algorithm_id == 4
+            memory_final = k*d + sparsity_level*(n-k);
+        end
+end        
 
-avg_dist_vs_sparsity_figure = figure('visible', 'off');
-plot(dist_with_sparsity);
-title([file_name '\_' algorithm_name '\_avgdistance\_vs\_sparsity\_epsilon=' num2str(epsilon)]);
-xlabel('Sparsity level');
-ylabel('Avg. distance (error)');
-refline(0, epsilon);
-saveas(avg_dist_vs_sparsity_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_avgdistance_vs_sparsity_epsilon=' num2str(epsilon) '.jpg']);
+% Compute various performance metrics, print them, and store the results
+final_cost = avg_dist_with_sparsity(sparsity_level);
+sparsity_coeff = (k + (n-k)*sparsity_level)/(n*k);
+memory_initial = n*d;
+compression_ratio = memory_final/memory_initial;
+memory_output = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sparsity_level, sparsity_coeff, final_cost];
+if exist()
+dlmwrite(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '.csv'], memory_output, '-append');
+
+disp(['Sparsity level:' num2str(sparsity_level)]);
+disp(['Sparsity coefficient:' num2str(sparsity_coeff)]);
+disp(['Final cost:' num2str(final_cost)]);
+disp(['Compression ratio:' num2str(compression_ratio)]);
+
+
 
 % % ------- Plotting the average error as a function of memory used -----
 % k = size(U, 2);
@@ -132,22 +150,6 @@ saveas(avg_dist_vs_sparsity_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directo
 % hold off;
 % saveas(Memory_plot, ['Output-' file_name '\Perceptron\chull-wise-memory' num2str(iter) '_epsilon=' num2str(epsilon) '.jpg']);
 %
-% % ------ Computing sparsity coeff and cost and storing results --------
-% C = dist_with_sparsity(sparsity_level);
-% k = size(U, 2);
-% sparsity_coeff = (k + (n-k)*sparsity_level)/(n*k);
-% output = [n, d, epsilon, k, sparsity_level, sparsity_coeff, C];
-%
-% memory_initial = n*d;
-% memory_final = memory(end);
-% compression_ratio = memory_final/memory_initial;
-% memory_output = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sparsity_level, sparsity_coeff, C];
-% % ------ CHANGE HERE(specify directory)-----------
-% dlmwrite(['Output-' file_name '\Perceptron\savings.csv'], output, '-append');
-% dlmwrite(['Output-' file_name '\Perceptron\memory.csv'], memory_output, '-append');
-%
-% display(iter);
-
 %     % Evaluate X using matrix multiplication
 %     P = Q; % Since P was changed in computing U, we need to reaasign
 %     c = 0.1;
@@ -173,9 +175,6 @@ saveas(avg_dist_vs_sparsity_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directo
 %     % ------ CHANGE HERE(specify directory)-----------
 %     dlmwrite('Output-wdbc\Max_avg_inactive\Chull-wise\results_chull.csv', output, '-append');
 %end
-
-
-
 
 end
 
