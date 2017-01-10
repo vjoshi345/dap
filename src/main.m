@@ -86,15 +86,19 @@ saveas(distance_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\outpu
 % Get the sparsity level when @dch is used and plot the average distance vs
 % sparsity level. Note that for @dp and @dl, sparsity level is one and two 
 % respectively.
-method_list = {[], [], @compute_dist_chull, @compute_dist_chull_perceptron};
+method_list = {@pdist2, @compute_dist_closest_line, @compute_dist_chull, @compute_dist_chull_perceptron};
 method = method_list{algorithm_id};
 switch algorithm_id
     case 1
         sparsity_level = 1;
         memory_final = k*(d-1) + n;
+        D = method(U', P', 'Euclidean', 'Smallest', 1);
+        final_cost = mean(D);
     case 2
         sparsity_level = 2;
         memory_final = k*(d-3) + 3*n;
+        D = method(U, P);
+        final_cost = mean(D);
     otherwise
         avg_dist_with_sparsity = zeros(1, d);
         sparsity_level = Inf;
@@ -119,10 +123,10 @@ switch algorithm_id
         if algorithm_id == 4
             memory_final = k*d + sparsity_level*(n-k);
         end
+        final_cost = avg_dist_with_sparsity(sparsity_level);
 end        
 
 % Compute various performance metrics, print them, and store the results
-final_cost = avg_dist_with_sparsity(sparsity_level);
 sparsity_coeff = (k + (n-k)*sparsity_level)/(n*k);
 memory_initial = n*d;
 compression_ratio = memory_final/memory_initial;

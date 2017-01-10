@@ -25,22 +25,6 @@ function [U, dist_array, avg_dist_array, count_inactive] = dch(P, method_id, eps
 %   dictionary.
 
 tic;
-%for iter = 1:1
-    %clearvars -except iter;
-    % Set seed (do this if you want to choose the same initial point) -----
-    %rng(0);
-    
-    % Setting Constants
-    %epsilon = 1;
-    %iterations = 10;
-
-    % Importing data and converting to the matrix form
-    % ----- CHANGE HERE (specify file)---------------
-%     file_name = 'CTG';
-%     P = csvread([file_name '-mod.csv']);
-%     P = P'; 
-%     %P = P(:, 1:150);
-
 % Choose the method to get distance to convex hull
 list_of_methods = {@compute_dist_chull, @compute_dist_chull_perceptron};
 method = list_of_methods{method_id};
@@ -55,34 +39,23 @@ if nargin < 3
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
     %epsilon = min(closest(2, :)); % Dist between closest two points
     epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
-
     %epsilon = (iter+1)*epsilon/2; % Multiplying epsilon to get results for different values
 end
 
-%Q = P; % We will manipuate P and keep a copy of it in Q for later use
-
-
-%--- DICTIONARY LEARNING - ALGORITHM-1 Distance from convex hull ------
-% Computing columns of U (greedy algorithm)
-r = randi([1, n], 1, 1);
+% Learn the dictionary using the greedy distance to convex-hull algorithm
 U = zeros(d, n);
+dist_array = zeros(1, n);
+avg_dist_array = zeros(1, n);
+count_inactive = zeros(1, n);
+
+r = randi([1, n], 1, 1);
+
 U(:, 1) = P(:, r);
 P(:, r) = [];
-
 D = method(U(:, 1), P, iterations);
-%D = distance_chull(U(:, 1), P, iterations);
-%D = distance_chull_perceptron(U(:, 1), P, iterations);
 [max_dist, max_index] = max(D);
-dist_array = zeros(1, n);
 dist_array(1) = max_dist;
-
-%display(D);
-%display(max_dist);
-
-avg_dist_array = zeros(1, n);
 avg_dist_array(1) = mean(D);
-
-count_inactive = zeros(1, n);
 count_inactive(1) = sum(D <= epsilon) + 1;
 
 flag = 0;
@@ -90,39 +63,58 @@ for i = 2:n
     if max_dist <= epsilon
         flag = 1;
         break
-    else
-        U(:, i) = P(:, max_index);
-        P(:, max_index) = [];
-        if i == n
-            dist_array(i) = 0;
-            avg_dist_array(i) = 0;
-            count_inactive(i) = n;
-        else
-            D = method(U(:, 1:i), P, iterations);
-            %D = distance_chull(U(:, 1:i), P, iterations);
-            %D = distance_chull_perceptron(U(:, 1:i), P, iterations);
-            [max_dist, max_index] = max(D);
-            dist_array(i) = max_dist;
-            avg_dist_array(i) = mean(D);
-            count_inactive(i) = sum(D <= epsilon) + i;
-
-        end
     end
+    
+    U(:, i) = P(:, max_index);
+    P(:, max_index) = [];
+    
+    if i == n
+        dist_array(i) = 0;
+        avg_dist_array(i) = 0;
+        count_inactive(i) = n;
+        break
+    end
+    
+    D = method(U(:, 1:i), P, iterations);
+    [max_dist, max_index] = max(D);
+    dist_array(i) = max_dist;
+    avg_dist_array(i) = mean(D);
+    count_inactive(i) = sum(D <= epsilon) + i;
+    
     fprintf('End of iteration:%d\n', i);
 end
 
 if flag == 1
     U = U(:, 1:(i-1));
-    dist_array  = dist_array(1:(i-1));
-    avg_dist_array  = avg_dist_array(1:(i-1));
+    dist_array = dist_array(1:(i-1));
+    avg_dist_array = avg_dist_array(1:(i-1));
     count_inactive = count_inactive(1:(i-1));
-else
-    U = U(:, 1:i);
-    dist_array = dist_array(1:i);
-    avg_dist_array  = avg_dist_array(1:i);
-    count_inactive = count_inactive(1:i);
 end
 
+% else
+%     U = U(:, 1:i);
+%     dist_array = dist_array(1:i);
+%     avg_dist_array  = avg_dist_array(1:i);
+%     count_inactive = count_inactive(1:i);
+% end
+
+% i = 2;
+% while max_dist > epsilon && i <= n    
+%     U(:, i) = P(:, max_index);
+%     P(:, max_index) = [];
+%     if i == n
+%         dist_array(i) = 0;
+%         avg_dist_array(i) = 0;
+%         count_inactive(i) = n;
+%         break
+%     end
+%     D = method(U(:, 1:i), P, iterations);
+%     [max_dist, max_index] = max(D);
+%     dist_array(i) = max_dist;
+%     avg_dist_array(i) = mean(D);
+%     count_inactive(i) = sum(D <= epsilon) + i;
+%     i = i + 1;
+% end
 %     %%% Plotting the distance as a function of the size of subset chosen
 %     Chull_wise = figure('visible', 'off');
 % 
@@ -256,8 +248,3 @@ end
     %display(iter);
 toc;    
 end
-
-%toc;
-
-%end
-
