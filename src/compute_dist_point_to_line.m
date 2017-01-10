@@ -5,8 +5,8 @@ function [p, dist] = compute_dist_point_to_line(q, a, b)
 %
 %    INUPT:
 %    q - query point (or matrix of points) (dxn)
-%    a - end point of line segment (matrix dxn)
-%    b - end point of line segment (matrix dxn)
+%    a - end point of line segment (vector dx1)
+%    b - end point of line segment (vector dx1)
 %    
 %    OUTPUT:
 %    p    - point on ab which is closest to q (matrix dxn)

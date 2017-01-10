@@ -15,6 +15,7 @@ function [] = main(data_path, algorithm_id, epsilon)
 %   OUTPUT:
 %   No variables returned. Summary statistics are plotted and saved.
 %
+timerVal = tic;
 rng(0);
 
 P = csvread(data_path);
@@ -184,6 +185,6 @@ disp(['Compression ratio:' num2str(compression_ratio)]);
 %     % ------ CHANGE HERE(specify directory)-----------
 %     dlmwrite('Output-wdbc\Max_avg_inactive\Chull-wise\results_chull.csv', output, '-append');
 %end
-
+toc(timerVal);
 end
 

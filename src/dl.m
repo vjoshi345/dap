@@ -55,6 +55,7 @@ count_inactive(1) = sum(D <= epsilon) + 1;
 
 flag = 0;
 for i = 2:n
+    timer = tic;
     if max_dist <= epsilon
         flag = 1;
         break
@@ -68,15 +69,49 @@ for i = 2:n
         avg_dist_array(i) = 0;
         count_inactive(i) = n;
     end
-    
-    D = compute_dist_closest_line(U(:, 1:i), P);
+    % Update the distance vector D due to the newly generated line segments
+    % in U
+    D(max_index) = [];
+    dist = Inf*ones(1, n-i);
+    for j = (i-1):-1:1
+        [~, temp_dist] = compute_dist_point_to_line(P, U(:, j), U(:, i));     
+        dist = min(dist, temp_dist);
+    end
+    D = min(D, dist);
     [max_dist, max_index] = max(D);
     dist_array(i) = max_dist;
     avg_dist_array(i) = mean(D);
     count_inactive(i) = sum(D <= epsilon) + i;
     
     fprintf('End of iteration:%d\n', i);
+    toc(timer);
 end
+
+% for i = 2:n
+%     tic;
+%     if max_dist <= epsilon
+%         flag = 1;
+%         break
+%     end
+%     
+%     U(:, i) = P(:, max_index);
+%     P(:, max_index) = [];
+%     
+%     if i == n
+%         dist_array(i) = 0;
+%         avg_dist_array(i) = 0;
+%         count_inactive(i) = n;
+%     end
+%     
+%     D = compute_dist_closest_line(U(:, 1:i), P);
+%     [max_dist, max_index] = max(D);
+%     dist_array(i) = max_dist;
+%     avg_dist_array(i) = mean(D);
+%     count_inactive(i) = sum(D <= epsilon) + i;
+%     
+%     fprintf('End of iteration:%d\n', i);
+%     toc;
+% end
 
 if flag == 1
     U = U(:, 1:(i-1));
