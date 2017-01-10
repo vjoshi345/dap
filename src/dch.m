@@ -91,13 +91,6 @@ if flag == 1
     count_inactive = count_inactive(1:(i-1));
 end
 
-% else
-%     U = U(:, 1:i);
-%     dist_array = dist_array(1:i);
-%     avg_dist_array  = avg_dist_array(1:i);
-%     count_inactive = count_inactive(1:i);
-% end
-
 % i = 2;
 % while max_dist > epsilon && i <= n    
 %     U(:, i) = P(:, max_index);

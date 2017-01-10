@@ -58,22 +58,25 @@ for i = 2:n
     if max_dist <= epsilon
         flag = 1;
         break
-    else
-        selected(not_selected_index_array(max_index)) = true;
-        not_selected(not_selected_index_array(max_index)) = false;
-        not_selected_index_array(max_index) = [];
-        if i == n
-            dist_array(i) = 0;
-            avg_dist_array(i) = 0;
-            count_inactive(i) = n;
-        else
-            [D, I] = pdist2(P(:, selected)', P(:, not_selected)', 'euclidean', 'Smallest', 1);
-            [max_dist, max_index] = max(D);
-            dist_array(i) = max_dist;
-            avg_dist_array(i) = mean(D);
-            count_inactive(i) = sum(D <= epsilon) + i;
-        end
     end
+    
+    selected(not_selected_index_array(max_index)) = true;
+    not_selected(not_selected_index_array(max_index)) = false;
+    not_selected_index_array(max_index) = [];
+    
+    if i == n
+        dist_array(i) = 0;
+        avg_dist_array(i) = 0;
+        count_inactive(i) = n;
+        break
+    end
+    
+    [D, I] = pdist2(P(:, selected)', P(:, not_selected)', 'euclidean', 'Smallest', 1);
+    [max_dist, max_index] = max(D);
+    dist_array(i) = max_dist;
+    avg_dist_array(i) = mean(D);
+    count_inactive(i) = sum(D <= epsilon) + i;
+    
     fprintf('End of iteration:%d\n', i);
 end
 
@@ -81,10 +84,6 @@ if flag == 1
     dist_array  = dist_array(1:(i-1));
     avg_dist_array  = avg_dist_array(1:(i-1));
     count_inactive = count_inactive(1:(i-1));
-else
-    dist_array = dist_array(1:i);
-    avg_dist_array  = avg_dist_array(1:i);
-    count_inactive = count_inactive(1:i);
 end
 
 % Generate the sparse code

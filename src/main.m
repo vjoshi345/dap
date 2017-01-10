@@ -60,7 +60,7 @@ switch algorithm_id
 end
 
 k = size(U, 2);
-disp(['Size of dictionary leanred:' num2str(k)]);
+disp(['Size of dictionary learned:' num2str(k)]);
 
 % Plot and save distance (max and average) as a function of the size of 
 % the dictionary size

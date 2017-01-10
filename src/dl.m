@@ -20,25 +20,14 @@ function [U, dist_array, avg_dist_array, count_inactive] = dl(P, epsilon)
 %                    iteration of the algorithm
 %
 %   TODO:
-%   Modify this function to return the sparse code learned in addition to
+%   1) Speed up this algorithm.
+%   2) Modify this function to return the sparse code learned in addition to
 %   the dictionary.
 %
 % P = U*X
 % P = d*n matrix, U = d*k matrix, X = k*n matrix
 %
 
-% rng(120);
-% tic;
-% for iter = 1:1
-%     clearvars -except iter;
-%     % Setting Constants
-%     %epsilon = 1;
-%
-%     % Importing data and converting to the matrix form
-%     % ----- CHANGE HERE (specify file)-
-%     file_name = '10line-data';
-%     P = csvread([file_name '-mod.csv']);
-%     P = P';
 [d, n] = size(P);
 
 if nargin < 2
@@ -48,28 +37,20 @@ if nargin < 2
     epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
 end
 
-%Q = P; % We will manipulate P and keep a copy of it in Q for later use
-
-%%%%%%%%%%%%%%%%%% ALGORITHM-2 Line-wise max distance %%%%%%%%%%%%%%%%%%%%
-% Computing columns of U
-r = randi([1, n], 1, 1);
+% Learn the dictionary using the greedy distance to line segments algorithm
 U = zeros(d, n);
+dist_array = zeros(1, n);
+avg_dist_array = zeros(1, n);
+count_inactive = zeros(1, n);
+
+r = randi([1, n], 1, 1);
+
 U(:, 1) = P(:, r);
 P(:, r) = [];
-
-dist_array = zeros(1, n);
-%dist_array(1) = pdist2(P', (U(:, 1))', 'euclidean', 'Largest', 1);
-%dist_array(1) = point_to_line(P, U(:, 1), U(:, 1));
-%[max_dist, max_index] = distance_line(U(:, 1), P);
-D = compute_dist_closest_line(U(:, 1), P); % Set of distances from each point in P
-% to the closest line-seg in U
+D = compute_dist_closest_line(U(:, 1), P); % Set of distances from each point in P to the closest line-seg in U
 [max_dist, max_index] = max(D);
 dist_array(1) = max_dist;
-
-avg_dist_array = zeros(1, n);
 avg_dist_array(1) = mean(D);
-
-count_inactive = zeros(1, n);
 count_inactive(1) = sum(D <= epsilon) + 1;
 
 flag = 0;
@@ -77,22 +58,23 @@ for i = 2:n
     if max_dist <= epsilon
         flag = 1;
         break
-    else
-        U(:, i) = P(:, max_index);
-        P(:, max_index) = [];
-        if i == n
-            dist_array(i) = 0;
-            avg_dist_array(i) = 0;
-            count_inactive(i) = n;
-        else
-            D = compute_dist_closest_line(U(:, 1:i), P);
-            %[max_dist, max_index] = distance_line(U(:, 1:i), P);
-            [max_dist, max_index] = max(D);
-            dist_array(i) = max_dist;
-            avg_dist_array(i) = mean(D);
-            count_inactive(i) = sum(D <= epsilon) + i;
-        end
     end
+    
+    U(:, i) = P(:, max_index);
+    P(:, max_index) = [];
+    
+    if i == n
+        dist_array(i) = 0;
+        avg_dist_array(i) = 0;
+        count_inactive(i) = n;
+    end
+    
+    D = compute_dist_closest_line(U(:, 1:i), P);
+    [max_dist, max_index] = max(D);
+    dist_array(i) = max_dist;
+    avg_dist_array(i) = mean(D);
+    count_inactive(i) = sum(D <= epsilon) + i;
+    
     fprintf('End of iteration:%d\n', i);
 end
 
@@ -101,11 +83,6 @@ if flag == 1
     dist_array  = dist_array(1:(i-1));
     avg_dist_array  = avg_dist_array(1:(i-1));
     count_inactive = count_inactive(1:(i-1));
-else
-    U = U(:, 1:i);
-    dist_array = dist_array(1:i);
-    avg_dist_array  = avg_dist_array(1:i);
-    count_inactive = count_inactive(1:i);
 end
 
 %     %%% Plotting the distance as a function of the size of subset chosen
@@ -185,7 +162,5 @@ end
 %     % ------ CHANGE HERE(specify directory)-----------
 %     dlmwrite('Output-wdbc\Max_avg_inactive\Line-wise\results_line.csv', output, '-append');
 end
-
-%toc;
 
 
