@@ -19,7 +19,7 @@ timerVal = tic;
 rng(0);
 
 P = csvread(data_path);
-P = P';
+%P = P';
 [d, n] = size(P);
 [~, file_name, ~] = fileparts(data_path);
 display(['Dataset name:' file_name]);
@@ -139,6 +139,12 @@ if exist(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '
     fclose(fid);
 end
 dlmwrite(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '.csv'], results, '-append');
+string = sprintf('%0.5f,', results);
+string = string(1:end-1);
+string = [file_name ',' algorithm_name ',' string '\n'];
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results.csv', 'a');
+fprintf(fid, string);
+fclose(fid);
 
 disp(['Sparsity level:' num2str(sparsity_level)]);
 disp(['Sparsity coefficient:' num2str(sparsity_coeff)]);
