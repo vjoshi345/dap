@@ -62,7 +62,7 @@ for i = 2:n
     
     selected(not_selected_index_array(max_index)) = true;
     not_selected(not_selected_index_array(max_index)) = false;
-    not_selected_index_array(max_index) = [];
+    %not_selected_index_array(max_index) = [];
     
     if i == n
         dist_array(i) = 0;
@@ -71,7 +71,19 @@ for i = 2:n
         break
     end
     
-    [D, I] = pdist2(P(:, selected)', P(:, not_selected)', 'euclidean', 'Smallest', 1);
+    % Update the distance vector D and index vector I due to the newly 
+    % selected point in the dictionary
+    %[D, I] = pdist2(P(:, selected)', P(:, not_selected)', 'euclidean', 'Smallest', 1);
+    D(max_index) = [];
+    I(max_index) = [];
+    [dist, ~] = pdist2(P(:, not_selected_index_array(max_index))', P(:, not_selected)', 'euclidean', 'Smallest', 1);
+    not_selected_index_array(max_index) = [];
+    for j = 1:size(dist, 2)
+        if dist(j) < D(j)
+            I(j) = i;
+            D(j) = dist(j);
+        end
+    end    
     [max_dist, max_index] = max(D);
     dist_array(i) = max_dist;
     avg_dist_array(i) = mean(D);
