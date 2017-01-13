@@ -49,11 +49,11 @@ switch algorithm_id
     case 3
         algorithm_name = func2str(algorithm);
         display(['Algorithm chosen:' algorithm_name]);
-        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 1, epsilon);        
+        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 1, epsilon, 10);        
     case 4
         algorithm_name = [func2str(algorithm) 'perceptron'];
         display(['Algorithm chosen:' algorithm_name]);
-        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 2, epsilon);        
+        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 2, epsilon, 10);        
     otherwise
         disp('Incorrect input');
         return
@@ -108,9 +108,10 @@ switch algorithm_id
             avg_dist_with_sparsity(j) = mean(D);
             if mean(D) <= epsilon && sparsity_level == Inf
                 sparsity_level = j;
+                break;
             end
         end
-        
+        %{
         avg_dist_vs_sparsity_figure = figure('visible', 'off');
         plot(avg_dist_with_sparsity);
         title([file_name '\_' algorithm_name '\_avgdistance\_vs\_sparsity\_epsilon=' num2str(epsilon)]);
@@ -118,7 +119,7 @@ switch algorithm_id
         ylabel('Avg. distance (error)');
         refline(0, epsilon);
         saveas(avg_dist_vs_sparsity_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_avgdistance_vs_sparsity_epsilon=' num2str(epsilon) '.jpg']);
-        
+        %}
         if algorithm_id == 3
             memory_final = k*d + (2*sparsity_level-1)*(n-k);
         end
