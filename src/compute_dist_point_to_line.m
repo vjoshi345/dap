@@ -20,12 +20,8 @@ function [p, dist] = compute_dist_point_to_line(q, a, b)
 %    p    - point on ab which is closest to q (matrix dxn)
 %    dist - distance from q to to line segment ab (vector 1xn)
 %
-%   TODO:
-%   Modify this function to work with q, a, and b all matrices. Each column
-%   of q is a query point. Corresponding columns of a and b are end points
-%   of line segements corresponding to a point in q.
 
-if ismatrix(a) && ismatrix(b)
+if ~isvector(a) && ~isvector(b)
     x = q - a; % x is (dxn)
     y = b - a; % y is (dxn)
     t = sum(x.*y); % t is (1xn)

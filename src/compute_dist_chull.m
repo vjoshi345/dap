@@ -11,10 +11,7 @@ function [dist] = compute_dist_chull(P, q, niter)
 %   OUTPUT:
 %   dist - the vector of evaluated distances
 %   
-%   TODO:
-%   Get rid of the for loop at the end. Requires changing the compute_dist_
-%   point_to_line function.
-%
+
 
 % Initial condition - find points t in P which are closest to query points 
 [~, n] = size(q); % No. of query points

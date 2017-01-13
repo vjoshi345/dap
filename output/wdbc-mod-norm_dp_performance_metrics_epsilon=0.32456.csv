@@ -1,3 +1,2 @@
 No. of points(n),No. of dimensions(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Sparsity level,Sparsity coeff,Final cost
-2126,21,0.18247,314,44646,12030,0.26945,3,0.0086134,0.16784
-2126,21,0.18247,314,44646,12030,0.26945,3,0.0086134,0.16784
+569,30,0.32456,329,17070,10110,0.59227,1,0.0030395,0.11313

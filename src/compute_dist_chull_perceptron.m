@@ -11,6 +11,11 @@ function [dist] = compute_dist_chull_perceptron(P, q, niter)
 %    OUTPUT:
 %    dist - the vector of evaluated distances
 %
+%   TODO:
+%   Need to check different possible interpretations of the perceptron
+%   algorithm and see which one to use here (right now we are using one
+%   of the variations).
+%
 
 % Initial condition - find points t in P which are closest to query points 
 [~, min_index] = pdist2(P', q', 'euclidean', 'Smallest', 1);
