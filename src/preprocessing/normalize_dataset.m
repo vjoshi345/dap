@@ -20,8 +20,6 @@ for i = 1:d
         P(:, i) = (P(:, i) - min(P(:, i)))/(max(P(:, i)) - min(P(:, i)));
     end
 end
-%temp = bsxfun(@minus, P, min(P));
-%P = bsxfun(@rdivide, temp, max(temp));
 P = P';
 
 dlmwrite(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\' file_name '-norm.csv'], P);

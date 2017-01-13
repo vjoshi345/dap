@@ -59,7 +59,9 @@ avg_dist_array(1) = mean(D);
 count_inactive(1) = sum(D <= epsilon) + 1;
 
 flag = 0;
+
 for i = 2:n
+    time = tic;
     if max_dist <= epsilon
         flag = 1;
         break
@@ -74,13 +76,13 @@ for i = 2:n
         count_inactive(i) = n;
         break
     end
-    
+
     D = method(U(:, 1:i), P, iterations);
     [max_dist, max_index] = max(D);
     dist_array(i) = max_dist;
     avg_dist_array(i) = mean(D);
     count_inactive(i) = sum(D <= epsilon) + i;
-    
+    toc(time);
     fprintf('End of iteration:%d\n', i);
 end
 

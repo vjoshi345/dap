@@ -20,8 +20,7 @@ function [U, dist_array, avg_dist_array, count_inactive] = dl(P, epsilon)
 %                    iteration of the algorithm
 %
 %   TODO:
-%   1) Speed up this algorithm.
-%   2) Modify this function to return the sparse code learned in addition to
+%   1) Modify this function to return the sparse code learned in addition to
 %   the dictionary.
 %
 % P = U*X

@@ -14,6 +14,7 @@ function [dist] = compute_dist_chull(P, q, niter)
 %   TODO:
 %   Get rid of the for loop at the end. Requires changing the compute_dist_
 %   point_to_line function.
+%
 
 % Initial condition - find points t in P which are closest to query points 
 [~, n] = size(q); % No. of query points
@@ -27,9 +28,10 @@ for i = 1:niter
     v = normc(v);
     [~, max_index] = max(v'*P, [], 2); % This is a column vector
     p = P(:, max_index');
-    for j = 1:n
-        [t(:, j), dist(j)] = compute_dist_point_to_line(q(:, j), t(:, j), p(:, j));
-    end
+    %for j = 1:n
+    %    [t(:, j), dist(j)] = compute_dist_point_to_line(q(:, j), t(:, j), p(:, j));
+    %end
+    [t, dist] = compute_dist_point_to_line(q, t, p);
 end
 end
 

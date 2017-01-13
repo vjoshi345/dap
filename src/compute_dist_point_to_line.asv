@@ -7,10 +7,7 @@ function [p, dist] = compute_dist_point_to_line(q, a, b)
 %    1) q is a matrix and a and b are vectors. This function returns the
 %    set of distances for each point in q to the line segment ab.
 %    2) q is a matrix and a and b are matrices (q, a, and b have the same
-%    size). This function returns the distance of each point in q to the
-%    corresponding line segment from ab. For example, dist(i) = distance
-%    from q(:, i) to line segment a(:, i)b(:, i).
-%
+%    size).
 %    INUPT:
 %    q - query point (or matrix of points) (dxn)
 %    a - end point of line segment (vector dx1)
@@ -25,30 +22,18 @@ function [p, dist] = compute_dist_point_to_line(q, a, b)
 %   of q is a query point. Corresponding columns of a and b are end points
 %   of line segements corresponding to a point in q.
 
-if ismatrix(a) && ismatrix(b)
-    x = q - a; % x is (dxn)
-    y = b - a; % y is (dxn)
-    t = sum(x.*y); % t is (1xn)
-    den = sum(y.^2); % den is (1xn)
-    nonzero_index = find(den);
-    t(nonzero_index) = t(nonzero_index)./den(nonzero_index);
-    p = a + bsxfun(@times, y, t); % p is (dxn)
-    
-    dist = sqrt(sum((q - p).^2)); % dist is (1xn)
+if isequal(a, b)
+    p = a;
+    dist = pdist2(a', q'); % dist is (1xn)
 else
-    if isequal(a, b)
-        p = a;
-        dist = pdist2(a', q'); % dist is (1xn)
-    else
-        x = bsxfun(@minus, q, a); % x is (dxn)
-        y = b - a; % y is (dx1)
+    x = bsxfun(@minus, q, a); % x is (dxn)
+    y = b - a; % y is (dx1)
 
-        t = (x'*y)/(y'*y); % t is (nx1)
+    t = (x'*y)/(y'*y); % t is (nx1)
 
-        p = bsxfun(@plus, (y*t'), a); % p is (dxn)
+    p = bsxfun(@plus, (y*t'), a); % p is (dxn)
 
-        dist = sqrt(sum((x - (y*t')).^2, 1)); % dist is (1xn)
-    end
+    dist = sqrt(sum((x - (y*t')).^2, 1)); % dist is (1xn)
 end
 end
 
