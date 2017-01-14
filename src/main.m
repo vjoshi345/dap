@@ -1,4 +1,4 @@
-function [] = main(data_path, algorithm_id, epsilon)
+function [] = main(data_path, algorithm_id, max_sparsity, epsilon)
 % MAIN Function to perform dictionary learning on a dataset with a user
 % specified algorithm.
 %
@@ -10,6 +10,9 @@ function [] = main(data_path, algorithm_id, epsilon)
 %                  2 - distance from line segments
 %                  3 - distance from convex hull
 %                  4 - distance from convex hull (perceptron method)
+%   max_sparsity - optional argument specifying the no. of iterations to 
+%                  compute the distance to convex hull for the dch 
+%                  algorithms (default = #dimensions of input data)
 %   epsilon      - optional argument specifying the error tolerance
 %
 %   OUTPUT:
@@ -25,13 +28,22 @@ display(['Dataset name:' file_name]);
 display(['No. of points(n):' num2str(n)]);
 display(['No. of dimensions(d):' num2str(d)]);
 
-if nargin < 3
+if nargin < 4
     % Choosing epsilon
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
     %epsilon = min(closest(2, :)); % Dist between closest two points
     epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
 end
 display(['Error tolerance (epsilon)=' num2str(epsilon)]);
+
+if nargin < 3 
+    if algorithm_id > 2
+        max_sparsity = d;    
+    else
+        max_sparsity = algorithm_id;
+    end
+end
+display(['Max sparsity (m)=' num2str(max_sparsity)]);
 
 algorithm_list = {@dp, @dl, @dch, @dch};
 algorithm = algorithm_list{algorithm_id};
@@ -49,11 +61,11 @@ switch algorithm_id
     case 3
         algorithm_name = func2str(algorithm);
         display(['Algorithm chosen:' algorithm_name]);
-        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 1, epsilon, 10);        
+        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 1, epsilon, max_sparsity);        
     case 4
         algorithm_name = [func2str(algorithm) 'perceptron'];
         display(['Algorithm chosen:' algorithm_name]);
-        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 2, epsilon, 10);        
+        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 2, epsilon, max_sparsity);        
     otherwise
         disp('Incorrect input');
         return
@@ -68,7 +80,7 @@ distance_figure = figure('visible', 'off');
 
 subplot(2, 1, 1);
 plot(dist_array);
-title([file_name '\_' algorithm_name '\_distance\_epsilon=' num2str(epsilon)]);
+title([file_name '\_' algorithm_name '\_distance\_epsilon=' num2str(epsilon) '\_maxsparsity=' num2str(max_sparsity)]);
 xlabel('No. of points in U');
 hold on;
 plot(avg_dist_array, 'green');
@@ -81,7 +93,7 @@ title(['Count of total inactive points in (P + U) (<= epsilon), epsilon = ' num2
 xlabel('No. of points in U');
 legend('Inactive points', 'Location', 'NorthWest');
 
-saveas(distance_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_distance_epsilon=' num2str(epsilon) '.jpg']);
+saveas(distance_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_distance_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '.jpg']);
 
 % Get the sparsity level when @dch is used and plot the average distance vs
 % sparsity level. Note that for @dp and @dl, sparsity level is one and two 
@@ -100,26 +112,25 @@ switch algorithm_id
         D = method(U, P);
         final_cost = mean(D);
     otherwise
-        avg_dist_with_sparsity = zeros(1, d);
+        avg_dist_with_sparsity = zeros(1, max_sparsity);
         sparsity_level = Inf;
-        for j = 1:d
+        for j = 1:max_sparsity
             disp(['Sparsity iteration:' num2str(j)]);
             D = method(U, P, j);
             avg_dist_with_sparsity(j) = mean(D);
             if mean(D) <= epsilon && sparsity_level == Inf
                 sparsity_level = j;
-                break;
             end
         end
-        %{
+        
         avg_dist_vs_sparsity_figure = figure('visible', 'off');
         plot(avg_dist_with_sparsity);
-        title([file_name '\_' algorithm_name '\_avgdistance\_vs\_sparsity\_epsilon=' num2str(epsilon)]);
+        title([file_name '\_' algorithm_name '\_avgdistance\_vs\_sparsity\_epsilon=' num2str(epsilon) '\_maxsparsity=' num2str(max_sparsity)]);
         xlabel('Sparsity level');
         ylabel('Avg. distance (error)');
         refline(0, epsilon);
-        saveas(avg_dist_vs_sparsity_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_avgdistance_vs_sparsity_epsilon=' num2str(epsilon) '.jpg']);
-        %}
+        saveas(avg_dist_vs_sparsity_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_avgdistance_vs_sparsity_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '.jpg']);
+        
         if algorithm_id == 3
             memory_final = k*d + (2*sparsity_level-1)*(n-k);
         end
@@ -133,14 +144,14 @@ end
 sparsity_coeff = (k + (n-k)*sparsity_level)/(n*k);
 memory_initial = n*d;
 compression_ratio = memory_final/memory_initial;
-results = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sparsity_level, sparsity_coeff, final_cost];
-if exist(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '.csv'], 'file') == 0
-    header = 'No. of points(n),No. of dimensions(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Sparsity level,Sparsity coeff,Final cost\n';
-    fid = fopen(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '.csv'], 'w');
+results = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sparsity_level, sparsity_coeff, final_cost, max_sparsity];
+if exist(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '.csv'], 'file') == 0
+    header = 'No. of points(n),No. of dimensions(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Sparsity level,Sparsity coeff,Final cost,Max sparsity(m)\n';
+    fid = fopen(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '.csv'], 'w');
     fprintf(fid, header);
     fclose(fid);
 end
-dlmwrite(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '.csv'], results, '-append');
+dlmwrite(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '.csv'], results, '-append');
 string = sprintf('%0.5f,', results);
 string = string(1:end-1);
 string = [file_name ',' algorithm_name ',' string '\n'];
