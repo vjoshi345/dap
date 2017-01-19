@@ -1,15 +1,17 @@
-function [U, dist_array, avg_dist_array, count_inactive] = dch(P, method_id, epsilon, iterations)
+function [U, dist_array, avg_dist_array, count_inactive] = dch(P, method_id, epsilon, iterations, stopping_func)
 % DCH Learns a dictionary for an input dataset using the distance from 
 % convex-hull algorithm.
 %
 %   INPUT:
-%   P          - the input dataset as a matrix with columns as datapoints 
-%                and rows as dimensions
-%   epsilon    - error tolerance for each datapoint (optional)
-%   iterations - no. of iterations to compute distance to convex hull
-%                (optional)
-%   method_id  - numeric value specifying the method used to compute 
-%                distance to convex hull
+%   P             - the input dataset as a matrix with columns as 
+%                   datapoints and rows as dimensions
+%   epsilon       - error tolerance for each datapoint (optional)
+%   iterations    - no. of iterations to compute distance to convex hull
+%                   (optional)
+%   method_id     - numeric value specifying the method used to compute 
+%                   distance to convex hull
+%   stopping_func - either @max or @mean which is to be used as the
+%                   stopping criterion (default = @max)
 %   
 %   OUTPUT:
 %   U              - the dictionary learned by the algorithm as a matrix
@@ -31,9 +33,14 @@ method = list_of_methods{method_id};
 
 [d, n] = size(P);
 
+if nargin < 5
+    stopping_func = @max;
+end
+
 if nargin < 4
     iterations = d;
 end
+
 if nargin < 3
     % Choosing epsilon
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
@@ -62,7 +69,8 @@ flag = 0;
 
 for i = 2:n
     time = tic;
-    if max_dist <= epsilon
+    %if max_dist <= epsilon
+    if stopping_func(D) <= epsilon
         flag = 1;
         break
     end

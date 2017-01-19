@@ -1,11 +1,13 @@
-function [selected, sparse_code, dist_array, avg_dist_array, count_inactive] = dp(P, epsilon)
+function [selected, sparse_code, dist_array, avg_dist_array, count_inactive] = dp(P, epsilon, stopping_func)
 % DP Learns a dictionary for an input dataset using the distance from
 % points algorithm.
 %
 %   INPUT:
-%   P       - the input dataset as a matrix with columns as datapoints
-%             and rows as dimensions
-%   epsilon - error tolerance for each datapoint
+%   P             - the input dataset as a matrix with columns as 
+%                   datapoints and rows as dimensions
+%   epsilon       - error tolerance for each datapoint
+%   stopping_func - either @max or @mean which is to be used as the
+%                   stopping criterion (default = @max)
 %
 %   OUTPUT:
 %   selected       - the index of atoms selected in the dictionary (vector)
@@ -22,6 +24,11 @@ function [selected, sparse_code, dist_array, avg_dist_array, count_inactive] = d
 %
 
 [~, n] = size(P);
+
+if nargin < 3
+    stopping_func = @max;
+end
+
 % Choose epsilon if argument is missing 
 if nargin < 2
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
@@ -55,7 +62,8 @@ count_inactive(1) = sum(D <= epsilon) + 1;
 
 flag = 0;
 for i = 2:n
-    if max_dist <= epsilon
+    %if max_dist <= epsilon
+    if stopping_func(D) <= epsilon
         flag = 1;
         break
     end

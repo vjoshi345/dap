@@ -1,11 +1,13 @@
-function [U, dist_array, avg_dist_array, count_inactive] = dl(P, epsilon)
+function [U, dist_array, avg_dist_array, count_inactive] = dl(P, epsilon, stopping_func)
 % DL Learns a dictionary for an input dataset using the distance from
 % line-segment pairs algorithm.
 %
 %   INPUT:
-%   P       - the input dataset as a matrix with columns as datapoints
-%             and rows as dimensions
-%   epsilon - error tolerance for each datapoint
+%   P             - the input dataset as a matrix with columns as
+%                   datapoints and rows as dimensions
+%   epsilon       - error tolerance for each datapoint
+%   stopping_func - either @max or @mean which is to be used as the
+%                   stopping criterion (default = @max)
 %
 %   OUTPUT:
 %   U              - the dictionary learned by the algorithm as a matrix
@@ -28,6 +30,10 @@ function [U, dist_array, avg_dist_array, count_inactive] = dl(P, epsilon)
 %
 
 [d, n] = size(P);
+
+if nargin < 3
+    stopping_func = @max;
+end
 
 if nargin < 2
     % Choosing epsilon
@@ -55,7 +61,8 @@ count_inactive(1) = sum(D <= epsilon) + 1;
 flag = 0;
 for i = 2:n
     timer = tic;
-    if max_dist <= epsilon
+    %if max_dist <= epsilon
+    if stopping_func(D) <= epsilon
         flag = 1;
         break
     end
