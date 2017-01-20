@@ -1,0 +1,2 @@
+- Includes results for max and average as stopping criteria for both the dictionary learning and sparse coding stage
+- Corrected Sparsity coefficient is basically Sparsity Coeff*Dictionary size(k)

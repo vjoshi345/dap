@@ -1,0 +1,6 @@
+- Memory = number of numbers that need to be remembered
+- Compression ratio = Final memory/Initial memory
+- Sparsity level =  No. of points from the dictionary required to reconstruct the dataset to get average reconstruction error under epsilon
+- Sparsity coeff = (k + (n-k)*sparsity_level)/(n*k)
+- Final cost = average reconstruction error = average distance of points to their representative in the reconstruction
+- Max sparsity = max points allowed to compute distance to convex hull
