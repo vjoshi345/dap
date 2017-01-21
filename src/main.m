@@ -117,43 +117,67 @@ switch algorithm_id
         D = method(U', P', 'Euclidean', 'Smallest', 1);
         %final_cost = mean(D);
         final_cost = stopping_func(D);
+        sparsity_coeff = (k + (n-k)*sparsity_level)/n;
     case 2
         sparsity_level = 2;
         memory_final = k*(d-3) + 3*n;
         D = method(U, P);
         %final_cost = mean(D);
         final_cost = stopping_func(D);
+        sparsity_coeff = (k + (n-k)*sparsity_level)/n;
     otherwise
-        avg_dist_with_sparsity = zeros(1, max_sparsity);
-        sparsity_level = Inf;
-        for j = 1:max_sparsity
+        %avg_dist_with_sparsity = zeros(1, max_sparsity);
+        sparsity_level = max_sparsity;
+        flag = 0;
+        sparsity_count = zeros(1, max_sparsity);
+        previous_dist = [];
+        for j = 1:max_sparsity            
             disp(['Sparsity iteration:' num2str(j)]);
+            
             D = method(U, P, j);
-            avg_dist_with_sparsity(j) = mean(D);
-            if stopping_func(D) <= epsilon && sparsity_level == Inf
+            if stopping_criterion == 1
+                threshold = epsilon;
+            else
+                threshold = 2*epsilon - max(D);
+            end
+            threshold = max(threshold, 0);
+            previous_dist = [previous_dist D(D <= threshold)];
+            sparsity_count(j) = sum(D <= threshold);
+            P = P(:, D > threshold);
+            D = D(D > threshold);
+            all_dist = [previous_dist D];
+            %avg_dist_with_sparsity(j) = mean(D);
+            final_cost = stopping_func(all_dist);            
+            if stopping_func(all_dist) <= epsilon && flag == 0
                 sparsity_level = j;
+                flag = 1;
+                break;
             end
         end
+        sparsity_count = sparsity_count(1:j);
+        sparsity_coeff = (sum((1:j).*sparsity_count) + sparsity_level*size(D, 2))/n;
         
-        avg_dist_vs_sparsity_figure = figure('visible', 'off');
-        plot(avg_dist_with_sparsity);
-        title([file_name '\_' algorithm_name '\_avgdistance\_vs\_sparsity\_epsilon=' num2str(epsilon) '\_maxsparsity=' num2str(max_sparsity) '\_stoppingcriterion=' func2str(stopping_func)]);
-        xlabel('Sparsity level');
-        ylabel('Avg. distance (error)');
-        refline(0, epsilon);
-        saveas(avg_dist_vs_sparsity_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_avgdistance_vs_sparsity_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.jpg']);
-        
+%         avg_dist_vs_sparsity_figure = figure('visible', 'off');
+%         plot(avg_dist_with_sparsity);
+%         title([file_name '\_' algorithm_name '\_avgdistance\_vs\_sparsity\_epsilon=' num2str(epsilon) '\_maxsparsity=' num2str(max_sparsity) '\_stoppingcriterion=' func2str(stopping_func)]);
+%         xlabel('Sparsity level');
+%         ylabel('Avg. distance (error)');
+%         refline(0, epsilon);
+%         saveas(avg_dist_vs_sparsity_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_avgdistance_vs_sparsity_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.jpg']);
+%         
         if algorithm_id == 3
-            memory_final = k*d + (2*sparsity_level-1)*(n-k);
+            %memory_final = k*d + (2*sparsity_level-1)*(n-k);
+            memory_final = k*d + sparsity_count(1)-k + sum((2*(2:sparsity_level)-1).*sparsity_count(2:end));
         end
         if algorithm_id == 4
-            memory_final = k*d + sparsity_level*(n-k);
+            %memory_final = k*d + sparsity_level*(n-k);
+            memory_final = k*d + sparsity_count(1)-k + sum((2*(2:sparsity_level)-1).*sparsity_count(2:end));
         end
-        final_cost = avg_dist_with_sparsity(sparsity_level);
+        %final_cost = avg_dist_with_sparsity(sparsity_level);
 end        
 
 % Compute various performance metrics, print them, and store the results
-sparsity_coeff = (k + (n-k)*sparsity_level)/(n*k);
+%sparsity_coeff = (k + (n-k)*sparsity_level)/n;
 memory_initial = n*d;
 compression_ratio = memory_final/memory_initial;
 results = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sparsity_level, sparsity_coeff, final_cost, max_sparsity];
@@ -166,14 +190,14 @@ if exist(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '
     fclose(fid);
 end
 %dlmwrite(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], results, '-append');
-fid = fopen(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'w');
+fid = fopen(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'a');
 fprintf(fid, string);
 fclose(fid);
 
 %string = sprintf('%0.5f,', results);
 %string = string(1:end-1);
 string = [file_name ',' algorithm_name ',' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results2.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results4.csv', 'a');
 fprintf(fid, string);
 fclose(fid);
 

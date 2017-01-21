@@ -1,0 +1,11 @@
+Dataset name,Algorithm,No. of points(n),No. of dimensions(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Sparsity level,Sparsity coeff,Final cost,Max sparsity(m),Stopping criterion
+iono-mod-norm,dch,351,34,0.70972,95,11934,13726,1.15016,21,15.58689,0.70923,34,max
+iono-mod-norm,dchperceptron,351,34,0.70972,94,11934,7308,0.61237,16,11.98291,0.70612,34,max
+CTG-mod-norm,dch,2126,21,0.18247,346,44646,80246,1.79738,21,17.74506,0.1821,21,max
+CTG-mod-norm,dchperceptron,2126,21,0.18247,314,44646,44646,1,21,18.0461,0.18221,21,max
+wdbc-mod-norm,dch,569,30,0.32456,61,17070,28754,1.68448,27,24.21265,0.32434,30,max
+wdbc-mod-norm,dchperceptron,569,30,0.32456,60,17070,10962,0.64218,18,16.20738,0.32426,30,max
+mnist1,dch,1000,784,5.47235,187,784000,162055,0.2067,10,8.317,5.47158,10,max
+mnist1,dchperceptron,1000,784,5.47235,190,784000,157060,0.20033,10,8.29,5.47075,10,max
+mnist2,dch,2000,784,5.0458,406,1568000,348590,0.22232,10,8.173,5.04354,10,max
+mnist2,dchperceptron,2000,784,5.0458,393,1568000,324182,0.20675,10,8.2315,5.04368,10,max

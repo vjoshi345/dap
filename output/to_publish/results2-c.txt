@@ -1,0 +1,1 @@
+corrected the final cost for dch and dchperceptron when @max is used as stopping criteria
