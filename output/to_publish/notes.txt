@@ -1,0 +1,2 @@
+- KSVD requires specifying the no if dictionary elements K while our algorithm does not
+- Both approaches do not require the solution of a convex optimization problem
