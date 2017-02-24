@@ -49,10 +49,10 @@
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist4.csv', 1, 1);
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist4.csv', 1, 2);
 
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 5);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\CTG-mod-norm.csv', 5);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 5);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 5);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 5);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\CTG-mod-norm.csv', 5);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 5);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 5);
 %main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 5);
 %main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist3.csv', 5);
 
