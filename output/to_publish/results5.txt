@@ -1,0 +1,5 @@
+- results of applying the KSVD algorithm on the datasets. KSVD requires us to fix the dictionary size beforehand. For sparse code we use OMP with an error threshold (i.e., perform OMP until a data point is represented with error <= epsilon). Note: here the outer iterations of KSVD are fixed - that is why in certain cases the final cost(which is avg. cost) is more than epsilon. Also, it depends on the dictionary size - say for k = 10, we may not be able to express the data such that the avg cost is below epsilon (even if we allow
+a lot of iterations).
+- In general, we see high compression and sparsity. 
+- Blue color - trying out for different values of dict size (k)
+- Pink color - trying out for different values of epsilon

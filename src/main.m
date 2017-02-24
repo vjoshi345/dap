@@ -11,6 +11,7 @@ function [] = main(data_path, algorithm_id, stopping_criterion, max_sparsity, ep
 %                        2 - distance from line segments
 %                        3 - distance from convex hull
 %                        4 - distance from convex hull (perceptron method)
+%                        5 - KSVD algorithm
 %   max_sparsity       - optional argument specifying the no. of iterations
 %                        to compute the distance to convex hull for the dch 
 %                        algorithms (default = #dimensions of input data)
@@ -22,7 +23,8 @@ function [] = main(data_path, algorithm_id, stopping_criterion, max_sparsity, ep
 %   No variables returned. Summary statistics are plotted and saved.
 %
 timerVal = tic;
-rng(0);
+%rng(0);
+rng('default');
 
 P = csvread(data_path);
 [d, n] = size(P);
@@ -36,6 +38,7 @@ if nargin < 5
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
     %epsilon = min(closest(2, :)); % Dist between closest two points
     epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
+    %epsilon = 10*epsilon;
 end
 display(['Error tolerance (epsilon)=' num2str(epsilon)]);
 
@@ -55,7 +58,7 @@ stopping_func_list = {@max, @mean};
 stopping_func = stopping_func_list{stopping_criterion};
 display(['Stopping criterion=' func2str(stopping_func)]);
 
-algorithm_list = {@dp, @dl, @dch, @dch};
+algorithm_list = {@dp, @dl, @dch, @dch, @KSVD};
 algorithm = algorithm_list{algorithm_id};
 
 switch algorithm_id
@@ -75,7 +78,20 @@ switch algorithm_id
     case 4
         algorithm_name = [func2str(algorithm) 'perceptron'];
         display(['Algorithm chosen:' algorithm_name]);
-        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 2, epsilon, max_sparsity, stopping_func);        
+        [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 2, epsilon, max_sparsity, stopping_func);
+    case 5
+        algorithm_name = func2str(algorithm);
+        display(['Algorithm chosen:' algorithm_name]);
+        param.K = 10;
+        param.numIteration = 50;
+        param.errorFlag = 1;
+        param.preserveDCAtom = 0;
+        param.errorGoal = epsilon;
+        param.InitializationMethod =  'DataElements';
+        param.displayProgress = 1;
+        %addpath C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\lib\KSVD_Matlab_ToolBox;
+        [U, output] = algorithm(P, param);        
+        %rmpath C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\lib\KSVD_Matlab_ToolBox;
     otherwise
         disp('Incorrect input');
         return
@@ -84,32 +100,38 @@ end
 k = size(U, 2);
 disp(['Size of dictionary learned:' num2str(k)]);
 
-% Plot and save distance (max and average) as a function of the size of 
-% the dictionary size
-distance_figure = figure('visible', 'off');
+% Plot the distance as a function of dictionary size (only for dp, dl and
+% dch)
+if algorithm_id < 5
+    % Plot and save distance (max and average) as a function of the size of 
+    % the dictionary size
+    distance_figure = figure('visible', 'off');
 
-subplot(2, 1, 1);
-plot(dist_array);
-title([file_name '\_' algorithm_name '\_distance\_epsilon=' num2str(epsilon) '\_maxsparsity=' num2str(max_sparsity) '\_stoppingcriterion=' func2str(stopping_func)]);
-xlabel('No. of points in U');
-hold on;
-plot(avg_dist_array, 'green');
-legend('Max dist', 'Avg dist');
-hold off;
+    subplot(2, 1, 1);
+    plot(dist_array);
+    title([file_name '\_' algorithm_name '\_distance\_epsilon=' num2str(epsilon) '\_maxsparsity=' num2str(max_sparsity) '\_stoppingcriterion=' func2str(stopping_func)]);
+    xlabel('No. of points in U');
+    hold on;
+    plot(avg_dist_array, 'green');
+    legend('Max dist', 'Avg dist');
+    hold off;
 
-subplot(2, 1, 2);
-plot(count_inactive);
-title(['Count of total inactive points in (P + U) (<= epsilon), epsilon = ' num2str(epsilon)]);
-xlabel('No. of points in U');
-legend('Inactive points', 'Location', 'NorthWest');
+    subplot(2, 1, 2);
+    plot(count_inactive);
+    title(['Count of total inactive points in (P + U) (<= epsilon), epsilon = ' num2str(epsilon)]);
+    xlabel('No. of points in U');
+    legend('Inactive points', 'Location', 'NorthWest');
 
-saveas(distance_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_distance_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.jpg']);
+    saveas(distance_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_distance_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.jpg']);
+end
 
 % Get the sparsity level when @dch is used and plot the average distance vs
 % sparsity level. Note that for @dp and @dl, sparsity level is one and two 
 % respectively.
-method_list = {@pdist2, @compute_dist_closest_line, @compute_dist_chull, @compute_dist_chull_perceptron};
-method = method_list{algorithm_id};
+if algorithm_id < 5
+    method_list = {@pdist2, @compute_dist_closest_line, @compute_dist_chull, @compute_dist_chull_perceptron};
+    method = method_list{algorithm_id};
+end
 switch algorithm_id
     case 1
         sparsity_level = 1;
@@ -123,6 +145,14 @@ switch algorithm_id
         D = method(U, P);
         final_cost = stopping_func(D);
         sparsity_coeff = (k + (n-k)*sparsity_level)/n;
+    case 5
+        X = output.CoefMatrix;
+        sparsity_level = output.numCoef(end);
+        sparsity_coeff = sparsity_level;
+        max_sparsity = k;
+        memory_final = d*k + nnz(X);
+        error_matrix = P - U*X;
+        final_cost = mean(sqrt(sum(error_matrix.^2)));
     otherwise
         %avg_dist_with_sparsity = zeros(1, max_sparsity);
         sparsity_level = max_sparsity;
@@ -134,11 +164,11 @@ switch algorithm_id
             
             D = method(U, P, j);
             %avg_dist_with_sparsity(j) = mean(D);
-            if stopping_criterion == 1
+%             if stopping_criterion == 1
                 threshold = epsilon;
-            else
-                threshold = 2*epsilon - max(D);
-            end
+%             else
+%                 threshold = 2*epsilon - max(D);
+%             end
             threshold = max(threshold, 0);
             
             previous_dist = [previous_dist D(D <= threshold)];
@@ -155,6 +185,12 @@ switch algorithm_id
             end
         end
         sparsity_count = sparsity_count(1:sparsity_level);
+        if flag == 0
+            sparsity_count(sparsity_level) = sparsity_count(sparsity_level) + size(D, 2);
+        end
+        disp(sparsity_count);
+        disp(size(D, 2));
+        disp(sum(sparsity_count));
         assert(sum(sparsity_count) == n, 'Sparse approximation not generated for all points!');
         sparsity_coeff = (sum((1:sparsity_level).*sparsity_count))/n;
         
@@ -193,7 +229,7 @@ fprintf(fid, string);
 fclose(fid);
 
 string = [file_name ',' algorithm_name ',' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results4.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results5.csv', 'a');
 fprintf(fid, string);
 fclose(fid);    
 

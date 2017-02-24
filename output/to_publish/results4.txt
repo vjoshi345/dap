@@ -1,4 +1,6 @@
 - different sparsity for different points for the dch and dchperceptron algorithms (for both @max and @min stopping functions)
 - @max stopping criterion -> once a point is within epsilon of the convex hull we fix its sparsity and do not consider it for higher sparsity levels
-- @min stopping criterion -> at each iteration, threshold = max(2*epsilon - max_dist, 0). Consider points with distance > threshold for higher sparsity levels
+- @min stopping criterion -> two different ways:
+	1) at each iteration, threshold = max(2*epsilon - max_dist, 0). Consider points with distance > threshold for higher sparsity 			levels
+	2) once a point is within epsilon of the convex hull we fix its sparsity and do not consider it for higher sparsity levels
 - Note that 'sparsity_level' now refers to the maximum sparsity needed for a point in the sparse approximation
