@@ -44,7 +44,7 @@ display(['Error tolerance (epsilon)=' num2str(epsilon)]);
 
 if nargin < 4 
     if algorithm_id > 2
-        max_sparsity = d;    
+        max_sparsity = min(d, 10);    
     else
         max_sparsity = algorithm_id;
     end
@@ -82,16 +82,14 @@ switch algorithm_id
     case 5
         algorithm_name = func2str(algorithm);
         display(['Algorithm chosen:' algorithm_name]);
-        param.K = 10;
+        param.K = 188;
         param.numIteration = 50;
         param.errorFlag = 1;
         param.preserveDCAtom = 0;
         param.errorGoal = epsilon;
         param.InitializationMethod =  'DataElements';
         param.displayProgress = 1;
-        %addpath C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\lib\KSVD_Matlab_ToolBox;
         [U, output] = algorithm(P, param);        
-        %rmpath C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\lib\KSVD_Matlab_ToolBox;
     otherwise
         disp('Incorrect input');
         return
@@ -164,11 +162,11 @@ switch algorithm_id
             
             D = method(U, P, j);
             %avg_dist_with_sparsity(j) = mean(D);
-%             if stopping_criterion == 1
+            if stopping_criterion == 1
                 threshold = epsilon;
-%             else
-%                 threshold = 2*epsilon - max(D);
-%             end
+            else
+                threshold = 2*epsilon - max(D);
+            end
             threshold = max(threshold, 0);
             
             previous_dist = [previous_dist D(D <= threshold)];
@@ -229,7 +227,7 @@ fprintf(fid, string);
 fclose(fid);
 
 string = [file_name ',' algorithm_name ',' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results5.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results6.csv', 'a');
 fprintf(fid, string);
 fclose(fid);    
 

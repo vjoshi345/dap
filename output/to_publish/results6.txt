@@ -1,0 +1,6 @@
+- results of applying the algorithms on the 20newsgroups dataset
+- Note that for dl the program doesn't terminate in a reasonable amount of time
+- Key observation: for KSVD we need to choose the right dictionary size otherwise the constraint of avg. cost <= epsilon may not be met
+and the algorithm does not terminate e.g., for this dataset with k = 50 we can't meet the constraint. So, need bigger dictionary size.
+- In general, we see that KSVD gives better compression overall but sparsity of dch is better. Even when we set k = 188 (the dictionary
+size given by dchperceptron) we see that the sparsity for KSVD is much worse.
