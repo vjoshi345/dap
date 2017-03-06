@@ -110,7 +110,7 @@ totalErr = zeros(1,param.numIteration);
 avg_error = Inf;
 % the K-SVD algorithm starts here.
 iterNum = 1;
-%for iterNum = 1:param.numIteration
+%for iterNum = 1:param.numIteration *** Introduced a modification here ***
 while avg_error > param.errorGoal
     % find the coefficients
     if (param.errorFlag==0)
@@ -144,7 +144,6 @@ while avg_error > param.errorGoal
         else
             output.numCoef(iterNum-1) = length(find(CoefMatrix))/size(Data,2);
             disp(['Iteration   ',num2str(iterNum),'   Average number of coefficients: ',num2str(output.numCoef(iterNum-1))]);
-            avg_error = mean(sqrt(sum((Data - Dictionary*CoefMatrix).^2)));
         end
     end
     if (displayErrorWithTrueDictionary ) 
@@ -153,6 +152,10 @@ while avg_error > param.errorGoal
         output.ratio = ratio;
     end
     Dictionary = I_clearDictionary(Dictionary,CoefMatrix(size(FixedDictionaryElement,2)+1:end,:),Data);
+    if (iterNum>1 && param.displayProgress)
+        avg_error = mean(sqrt(sum((Data - Dictionary*CoefMatrix).^2)));
+        disp(['Iteration   ',num2str(iterNum),'   Average error: ',num2str(avg_error)]);
+    end
     
     if (isfield(param,'waitBarHandle'))
         waitbar(iterNum/param.counterForWaitBar);

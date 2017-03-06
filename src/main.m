@@ -38,13 +38,13 @@ if nargin < 5
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
     %epsilon = min(closest(2, :)); % Dist between closest two points
     epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
-    %epsilon = 10*epsilon;
 end
 display(['Error tolerance (epsilon)=' num2str(epsilon)]);
 
 if nargin < 4 
     if algorithm_id > 2
-        max_sparsity = min(d, 10);    
+        %max_sparsity = min(d, 50);    
+        max_sparsity = d;
     else
         max_sparsity = algorithm_id;
     end
@@ -82,7 +82,7 @@ switch algorithm_id
     case 5
         algorithm_name = func2str(algorithm);
         display(['Algorithm chosen:' algorithm_name]);
-        param.K = 188;
+        param.K = 50;
         param.numIteration = 50;
         param.errorFlag = 1;
         param.preserveDCAtom = 0;
@@ -145,12 +145,13 @@ switch algorithm_id
         sparsity_coeff = (k + (n-k)*sparsity_level)/n;
     case 5
         X = output.CoefMatrix;
-        sparsity_level = output.numCoef(end);
-        sparsity_coeff = sparsity_level;
+        sparsity_level = k;
+        sparsity_coeff = output.numCoef(end);
         max_sparsity = k;
         memory_final = d*k + nnz(X);
         error_matrix = P - U*X;
         final_cost = mean(sqrt(sum(error_matrix.^2)));
+        disp(['Final cost: ' num2str(final_cost)]);
     otherwise
         %avg_dist_with_sparsity = zeros(1, max_sparsity);
         sparsity_level = max_sparsity;
@@ -217,7 +218,7 @@ results = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sp
 string = sprintf('%0.5f,', results);
 string = [string func2str(stopping_func)];
 if exist(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'file') == 0
-    header = 'No. of points(n),No. of dimensions(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Sparsity level,Sparsity coeff,Final cost,Max sparsity(m),Stopping criterion\n';
+    header = 'No. of points(n),No. of dimensions(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Actual max sparsity,Sparsity coeff,Final cost,Max allowed sparsity(m),Stopping criterion\n';
     fid = fopen(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'w');
     fprintf(fid, header);
     fclose(fid);
@@ -227,7 +228,7 @@ fprintf(fid, string);
 fclose(fid);
 
 string = [file_name ',' algorithm_name ',' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results6.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results7.csv', 'a');
 fprintf(fid, string);
 fclose(fid);    
 

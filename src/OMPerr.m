@@ -28,12 +28,7 @@ for k=1:1:P,
         pos=find(abs(proj)==max(abs(proj)));
         pos=pos(1);
         indx(j)=pos;
-        a=pinv(D(:,indx(1:j)))*x; % *** Introduced a modification here ***
-        % *********** %
-%         C = D(:,indx(1:j))'*D(:,indx(1:j));
-%         d = D(:,indx(1:j))'*x;
-%         a = C\d;
-        % *********** %
+        a=pinv(D(:,indx(1:j)))*x; 
         residual=x-D(:,indx(1:j))*a;
 		currResNorm2 = sum(residual.^2);
    end;
