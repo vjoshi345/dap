@@ -82,7 +82,7 @@ switch algorithm_id
     case 5
         algorithm_name = func2str(algorithm);
         display(['Algorithm chosen:' algorithm_name]);
-        param.K = 50;
+        param.K = 100;
         param.numIteration = 50;
         param.errorFlag = 1;
         param.preserveDCAtom = 0;
@@ -151,7 +151,6 @@ switch algorithm_id
         memory_final = d*k + nnz(X);
         error_matrix = P - U*X;
         final_cost = mean(sqrt(sum(error_matrix.^2)));
-        disp(['Final cost: ' num2str(final_cost)]);
     otherwise
         %avg_dist_with_sparsity = zeros(1, max_sparsity);
         sparsity_level = max_sparsity;

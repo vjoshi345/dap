@@ -1,0 +1,11 @@
+- results of applying all the algorithms (dp, dl, dch, dchperceptron, KSVD w/ @max and @mean stopping rules) on all datasets (iono, CTG,
+wdbc, mnist1, 20newsgroups1000_1)
+- @mean stopping threshold = max(2*epsilon - max_dist, 0)
+- For dch and dchperceptron the max allowable sparsity is fixed as follows:
+	- iono -> d = 34; CTG -> d = 21; wdbc -> d = 30; mnist1 -> 10; 20newsgroups1000_1 -> 10
+- For KSVD the following parameters are fixed:
+	- Dictionary size (K) = 50 unless the algorithm doesn't terminate e.g., for 20newsgroups1000_1 'K' is set to 100
+	- For OMP stopping criterion is either when residual error for a data point is <= epsilon or 
+	when #iterations > min (#dim, #dict elements)
+	- For KSVD stopping criterion is when avg. error <= epsilon. This also means that the algorithm may not terminate for small values
+	of 'K' for a dataset.

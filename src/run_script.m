@@ -1,13 +1,13 @@
 
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 1, 1);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 2, 1);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 3, 1);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 4, 1);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 1, 2);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 2, 2);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 3, 2);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 4, 2);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 5, 2);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 1, 1);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 2, 1);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 3, 1);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 4, 1);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 1, 2);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 2, 2);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 3, 2);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 4, 2);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 5, 2);
 % 
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\CTG-mod-norm.csv', 1, 1);
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\CTG-mod-norm.csv', 2, 1);
@@ -42,13 +42,13 @@ main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 
 
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 1, 1);
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 2, 1);
-% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 3, 1, 10);
-% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 4, 1, 10);
-% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 1, 2);
-% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 2, 2);
-% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 3, 2, 10);
-% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 4, 2, 10);
-% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 5, 2);
+main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 3, 1, 10);
+main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 4, 1, 10);
+main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 1, 2);
+main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 2, 2);
+main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 3, 2, 10);
+main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 4, 2, 10);
+main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups1000_1.csv', 5, 2);
 
 
 % % 
