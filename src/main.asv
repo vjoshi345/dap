@@ -1,4 +1,4 @@
-function [U] = main(data_path, algorithm_id, stopping_criterion, max_sparsity, epsilon)
+function [] = main(data_path, algorithm_id, stopping_criterion, max_sparsity, epsilon)
 % MAIN Function to perform dictionary learning on a dataset with a user
 % specified algorithm.
 %
@@ -236,7 +236,7 @@ disp(['Sparsity coefficient:' num2str(sparsity_coeff)]);
 disp(['Final cost:' num2str(final_cost)]);
 disp(['Compression ratio:' num2str(compression_ratio)]);
 
-
+% Visualize the dictionary learned for MNIST
 
 % % ------- Plotting the average error as a function of memory used -----
 % k = size(U, 2);

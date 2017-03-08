@@ -34,8 +34,8 @@
 %
 %
 %
-D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 1, 1);
-save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dp-max.mat', 'D');
+% D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 1, 1);
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dp-max.mat', 'D');
 % visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1 - dp-max algorithm');
 
 % D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 2, 1);
@@ -46,9 +46,9 @@ save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_
 % save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dch-max.mat', 'D');
 % visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1 - dch-max algorithm');
 
-% D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 4, 1, 10);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dchperceptron-max.mat', 'D');
-% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1 - dchperceptron-max algorithm');
+D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 4, 1, 10);
+save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dchperceptron-max.mat', 'D');
+visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1 - dchperceptron-max algorithm');
 
 % D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 1, 2);
 % save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dp-mean.mat', 'D');
@@ -63,11 +63,10 @@ save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_
 % visualize_dict(D, 50, 28, 28, 'Dictionary atoms for mnist1 - dch-mean algorithm');
 
 % D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 4, 2, 10);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dchperceptron-mean.mat', 'D');
+save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dchperceptron-mean.mat', 'D');
 % visualize_dict(D, 50, 28, 28, 'Dictionary atoms for mnist1 - dchperceptron-mean algorithm');
-
 % D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 5, 2);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_KSVD.mat', 'D');
+save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_KSVD.mat', 'D');
 % visualize_dict(D, 50, 28, 28, 'Dictionary atoms for mnist1 - KSVD algorithm');
 %
 %
