@@ -1,0 +1,3 @@
+- average of two metrics - compression and avg. sparsity - across datasets for each algorithm
+- this table is built based on results7.csv
+- useful for comparing performance of the algorithms on the two metrics

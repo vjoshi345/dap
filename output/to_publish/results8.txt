@@ -1,0 +1,5 @@
+- studying the variation in compression and avg. sparsity (of each dataset) by varying the dictionary size (K) in the KSVD algorithm
+- expected behaviour was that with increasing K, the compression should decrease and avg. sparsity should decrease
+- actual behaviour seen does not suggest such a rule. Behaviour is different for different datasets
+- another interesting observation: for some datasets increasing K results in the algorithm not converging which was not expected
+because we would hope that with a larger dictionary it should be easier to get a sparse approximation

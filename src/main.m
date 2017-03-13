@@ -82,7 +82,7 @@ switch algorithm_id
     case 5
         algorithm_name = func2str(algorithm);
         display(['Algorithm chosen:' algorithm_name]);
-        param.K = 100;
+        param.K = 200;
         param.numIteration = 50;
         param.errorFlag = 1;
         param.preserveDCAtom = 0;
@@ -227,7 +227,7 @@ fprintf(fid, string);
 fclose(fid);
 
 string = [file_name ',' algorithm_name ',' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results7.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results8.csv', 'a');
 fprintf(fid, string);
 fclose(fid);    
 

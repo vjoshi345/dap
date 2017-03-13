@@ -1,0 +1,3 @@
+- performance of each algorithm tabulated separately for each dataset on the two metrics - compression and avg. sparsity
+- this table is based on results7.csv
+- useful for understanding why one algorithm works better/worse for a dataset on the two metrics
