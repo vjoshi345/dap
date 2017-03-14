@@ -1,0 +1,2 @@
+No. of points(n),No. of dimensions(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Actual max sparsity,Sparsity coeff,Final cost,Max allowed sparsity(m),Stopping criterion
+569.00000,30.00000,0.32456,18.00000,17070.00000,33049.00000,1.93609,30.00000,29.08260,0.34186,30.00000,mean

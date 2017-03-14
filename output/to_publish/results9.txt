@@ -1,0 +1,5 @@
+- randomized -> choose a random subset of the data as the dictionary and then use one of dp, dl, or dch for sparse coding
+- We choose the dictionary size(k) for randomized algo to be equal to the size learned by our dictionary learning algorithms (dp, dl,
+or dch) for comparison (based on table1.xlsx results a.k.a results7.xlsx)
+- In general, we see rnadomized perform worse than others - doesn't meet the final cost constraint or if it meets then the compression
+and sparsity is worse. However, a few cases where it is performing better (surprising!).

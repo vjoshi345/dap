@@ -1,6 +1,6 @@
-function [U] = main(data_path, algorithm_id, stopping_criterion, max_sparsity, epsilon)
-% MAIN Function to perform dictionary learning on a dataset with a user
-% specified algorithm.
+function [U] = main(data_path, algorithm_id, param)
+% MAIN Function to perform sparse dictionary learning on a dataset with a 
+% user specified algorithm.
 %
 %   INPUT:
 %   data_path          - full path to the dataset stored as a .csv or .mat 
@@ -12,16 +12,25 @@ function [U] = main(data_path, algorithm_id, stopping_criterion, max_sparsity, e
 %                        3 - distance from convex hull
 %                        4 - distance from convex hull (perceptron method)
 %                        5 - KSVD algorithm
-%   max_sparsity       - optional argument specifying the no. of iterations
-%                        to compute the distance to convex hull for the dch 
-%                        algorithms (default = #dimensions of input data)
-%   stopping_criterion - optional argument specifying either the max(1) or
-%                        mean(2) as the stopping criteria (default = max)
-%   epsilon            - optional argument specifying the error tolerance
+%                        6 - randomized dictionary learning
+%   param              - structure that includes a variety of optional 
+%                        arguments
+%       max_sparsity       - optional argument specifying the no. of 
+%                            iterations to compute the distance to convex 
+%                            hull for the dch algorithms (default = #dimensions of input data)
+%       stopping_criterion - optional argument specifying either the max(1)
+%                            or mean(2) as the stopping criteria (default = max)
+%       epsilon            - optional argument specifying the error tolerance
+%       dictionary_size    - (optional) if KSVD or randomized algorithm is used
+%                            need to specify a dictionary size (default = 50)
+%       sparse_algo        - (optional) if randomized dictionary learning
+%                            is used need to specify the algo for sparse
+%                            coding(1-@dp, 2-@dl, 3-@dch, 4-@dchperceptron)
 %
 %   OUTPUT:
 %   No variables returned. Summary statistics are plotted and saved.
 %
+
 timerVal = tic;
 %rng(0);
 rng('default');
@@ -29,38 +38,56 @@ rng('default');
 P = csvread(data_path);
 [d, n] = size(P);
 [~, file_name, ~] = fileparts(data_path);
+fprintf('\n');
+fprintf('-------------------------------------------------------------\n');
 display(['Dataset name:' file_name]);
 display(['No. of points(n):' num2str(n)]);
 display(['No. of dimensions(d):' num2str(d)]);
 
-if nargin < 5
-    % Choosing epsilon
+if (~isfield(param, 'epsilon'))
     closest = pdist2(P', P', 'euclidean', 'Smallest', 2);
     %epsilon = min(closest(2, :)); % Dist between closest two points
     epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
+else
+    epsilon = param.epsilon;
 end
 display(['Error tolerance (epsilon)=' num2str(epsilon)]);
 
-if nargin < 4 
+if (~isfield(param, 'max_sparsity'))
     if algorithm_id > 2
-        %max_sparsity = min(d, 50);    
         max_sparsity = d;
     else
         max_sparsity = algorithm_id;
     end
+else
+    max_sparsity = param.max_sparsity;
 end
 display(['Max sparsity (m)=' num2str(max_sparsity)]);
 
-if nargin < 3
+if (~isfield(param, 'stopping_criterion'))
     stopping_criterion = 1;
+else
+    stopping_criterion = param.stopping_criterion;
 end
+
 stopping_func_list = {@max, @mean};
 stopping_func = stopping_func_list{stopping_criterion};
 display(['Stopping criterion=' func2str(stopping_func)]);
 
-algorithm_list = {@dp, @dl, @dch, @dch, @KSVD};
-algorithm = algorithm_list{algorithm_id};
+if algorithm_id == 5 || algorithm_id == 6
+    if (~isfield(param, 'dictionary_size'))
+        k = 50;
+    else
+        k = param.dictionary_size;
+    end
+end
 
+if algorithm_id == 6
+    assert(isfield(param, 'sparse_algo'), 'Algo for sparse coding unspecified!');
+end
+
+algorithm_list = {@dp, @dl, @dch, @dch, @KSVD, 'randomized'};
+algorithm = algorithm_list{algorithm_id};
 switch algorithm_id
     case 1
         algorithm_name = func2str(algorithm);
@@ -82,14 +109,17 @@ switch algorithm_id
     case 5
         algorithm_name = func2str(algorithm);
         display(['Algorithm chosen:' algorithm_name]);
-        param.K = 200;
-        param.numIteration = 50;
-        param.errorFlag = 1;
-        param.preserveDCAtom = 0;
-        param.errorGoal = epsilon;
-        param.InitializationMethod =  'DataElements';
-        param.displayProgress = 1;
-        [U, output] = algorithm(P, param);        
+        param1.K = k;
+        param1.numIteration = 50;
+        param1.errorFlag = 1;
+        param1.preserveDCAtom = 0;
+        param1.errorGoal = epsilon;
+        param1.InitializationMethod =  'DataElements';
+        param1.displayProgress = 1;
+        [U, output] = algorithm(P, param1);
+    case 6
+        display(['Algorithm chosen:' algorithm]);
+        U = datasample(P, k, 2, 'Replace', false);        
     otherwise
         disp('Incorrect input');
         return
@@ -126,6 +156,14 @@ end
 % Get the sparsity level when @dch is used and plot the average distance vs
 % sparsity level. Note that for @dp and @dl, sparsity level is one and two 
 % respectively.
+if algorithm_id == 6
+    algorithm_id = param.sparse_algo;
+    algorithm_name = [algorithm '-' func2str(algorithm_list{algorithm_id})];
+    if algorithm_id == 4
+        algorithm_name = [algorithm_name 'perceptron'];
+    end
+end
+
 if algorithm_id < 5
     method_list = {@pdist2, @compute_dist_closest_line, @compute_dist_chull, @compute_dist_chull_perceptron};
     method = method_list{algorithm_id};
@@ -227,7 +265,7 @@ fprintf(fid, string);
 fclose(fid);
 
 string = [file_name ',' algorithm_name ',' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results8.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results9.csv', 'a');
 fprintf(fid, string);
 fclose(fid);    
 
