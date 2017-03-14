@@ -1,4 +1,4 @@
-function [dist] = compute_dist_chull_perceptron(P, q, niter)
+function [dist, t] = compute_dist_chull_perceptron(P, q, niter)
 % COMPUTE_DIST_CHULL_PERCEPTRON - Calculates the distance of a set of query 
 % points to the convex hull of a set of points using the perceptron method.
 %
@@ -9,7 +9,8 @@ function [dist] = compute_dist_chull_perceptron(P, q, niter)
 %    niter - no. of iterations to get approximate distance to convex hull
 %
 %    OUTPUT:
-%    dist - the vector of evaluated distances
+%    dist - the vector of evaluated distances (1xn)
+%    t    - the matrix of reconstructed points (dxn)
 %
 %   TODO:
 %   Need to check different possible interpretations of the perceptron
