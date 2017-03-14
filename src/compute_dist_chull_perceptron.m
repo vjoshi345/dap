@@ -7,6 +7,8 @@ function [dist, t] = compute_dist_chull_perceptron(P, q, niter)
 %            convex hull
 %    q     - matrix of query points represented as column vectors
 %    niter - no. of iterations to get approximate distance to convex hull
+%            N.B.: note that niter here reflects the sparsity of
+%            reconstruction
 %
 %    OUTPUT:
 %    dist - the vector of evaluated distances (1xn)

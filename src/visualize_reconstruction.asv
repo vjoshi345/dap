@@ -22,8 +22,6 @@ assert(d == size(D, 1), 'Dimensions of dictionary and original points do not mat
 
 method_list = {@compute_dist_chull, @compute_dist_chull_perceptron};
 method = method_list{algorithm_id};
-algorithm_list = {'dch', 'dchperceptron'};
-algorithm_name = algorithm_list{algorithm_id};
 
 % Get the reconstructed points for each level of sparsity
 recon = zeros(d, n, niter);
@@ -44,7 +42,7 @@ for i = 1:n
         imshow(curr);
         title(['Sparsity:' num2str(j)]);
     end
-    suptitle(['Reconstruction of a point using ' algorithm_name]);
+    suptitle('');
 end
 
 
