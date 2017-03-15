@@ -1,0 +1,2 @@
+- reconstruction of points for different sparsity levels (we use dictionary created using max-dch and max-dchperceptron)
+- _eps files refer to when we stop the reconstruction when error <= epsilon
