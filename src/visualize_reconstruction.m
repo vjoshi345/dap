@@ -1,4 +1,4 @@
-function [recon] = visualize_reconstruction(D, Y, algorithm_id, niter)
+function [recon] = visualize_reconstruction(D, Y, algorithm_id, param)
 % VISUALIZE_RECONSTRUCTION Plots the reconstruction of a point at each
 % iteration using a fixed dictionary and a sparse coding algorithm.
 % N.B.: this function is meaningful only for an image dataset.
@@ -9,38 +9,60 @@ function [recon] = visualize_reconstruction(D, Y, algorithm_id, niter)
 %                  points, rows = features)
 %   algorithm_id - algorithm used for sparse coding
 %                  1-dch, 2-dchperceptron
-%   niter        - #iterations of the sparse coding algorithm to be run
+%   param        - structure that includes a variety of optional arguments
+%       niter    - (optional) max #iterations of the sparse coding 
+%                  algorithm to be run
+%       epsilon  - (optional) error threshold for the reconstruction
 %   
 %   OUTPUT:
 %   recon - the reconstruction of each point from Y for each iteration of
 %           the sparse coding algorithm (size = size(Y)*#iterations)
 %
 
-assert(algorithm_id == 1 || algorithm_id == 2, 'algorithm_id should be either 1 or 2!');
+% Check that the input arguments are correctly specified
 [d, n] = size(Y);
 assert(d == size(D, 1), 'Dimensions of dictionary and original points do not match!');
+
+assert(algorithm_id == 1 || algorithm_id == 2, 'algorithm_id should be either 1 or 2!');
+
+if(~isfield(param, 'niter'))
+    niter = 10;
+else
+    niter = param.niter;
+end
+
+if(~isfield(param, 'epsilon'))
+    epsilon = 0;
+else
+    epsilon = param.epsilon;
+end
 
 method_list = {@compute_dist_chull, @compute_dist_chull_perceptron};
 method = method_list{algorithm_id};
 algorithm_list = {'dch', 'dchperceptron'};
 algorithm_name = algorithm_list{algorithm_id};
+shape = sqrt(d);
 
 % Get the reconstructed points for each level of sparsity
 recon = zeros(d, n, niter);
+dist = zeros(niter, n);
+idx = false(niter, n);
 for i = 1:niter
-     [~, recon(:, :, i)] = method(D, Y, i);
+     [dist(i, :), recon(:, :, i)] = method(D, Y, i);
+     idx(i, :) = dist(i, :) > epsilon;
 end
 
 % Plot the reconstructed points alongwith the original
 for i = 1:n
     figure();
-    subplot(2, niter, 1:niter);
-    curr = reshape(Y(:, i), [28, 28]);
+    curriter = sum(idx(:, i));
+    subplot(2, curriter, 1:curriter);
+    curr = reshape(Y(:, i), [shape, shape]);
     imshow(curr);
     title('Original point');
-    for j = 1:niter
-        subplot(2, niter, niter+j);
-        curr = reshape(recon(:, i, j), [28, 28]);
+    for j = 1:curriter
+        subplot(2, curriter, curriter+j);
+        curr = reshape(recon(:, i, j), [shape, shape]);
         imshow(curr);
         title(['Sparsity:' num2str(j)]);
     end
