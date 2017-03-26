@@ -28,7 +28,7 @@
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 2, 2);
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 3, 2);
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 4, 2);
-main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 5, 2);
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 5, 2);
 %
 %
 %
@@ -42,11 +42,13 @@ main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 
 % save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dl-max.mat', 'D');
 % visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1 - dl-max algorithm');
 
-% D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 3, 1, 10);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dch-max.mat', 'D');
-% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1 - dch-max algorithm');
+param.max_sparsity = 10; param.stopping_criterion = 1;
+D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed1.csv', 3, param);
+save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed1_Dictionary_dch-max.mat', 'D');
+visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-deskewed1 - dch-max algorithm');
 
-% D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 4, 1, 10);
+% param.max_sparsity = 10; param.stopping_criterion = 1;
+% D = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1.csv', 4, param);
 % save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1_Dictionary_dchperceptron-max.mat', 'D');
 % visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1 - dchperceptron-max algorithm');
 

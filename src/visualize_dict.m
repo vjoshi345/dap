@@ -7,7 +7,7 @@ function [] = visualize_dict(D, nimages, width, height, string)
 %             sample is taken)
 %   width   - the width of the image to be plotted (aka #columns of the
 %             matrix)
-%   width   - the height of the image to be plotted (aka #rows of the
+%   height  - the height of the image to be plotted (aka #rows of the
 %             matrix)
 %   string  - string to be put as the title
 %
