@@ -1,4 +1,4 @@
-function [U] = main(data_path, algorithm_id, param)
+function [out] = main(data_path, algorithm_id, param)
 % MAIN Function to perform sparse dictionary learning on a dataset with a 
 % user specified algorithm.
 %
@@ -28,7 +28,10 @@ function [U] = main(data_path, algorithm_id, param)
 %                            coding(1-@dp, 2-@dl, 3-@dch, 4-@dchperceptron)
 %
 %   OUTPUT:
-%   No variables returned. Summary statistics are plotted and saved.
+%   out - structure containing various output variables
+%       U        - the learned dictionary
+%       dict_idx - the indices of points from the data matrix that are 
+%                  chosen to be dictionary atoms (NA for KSVD and randomized)
 %
 
 timerVal = tic;
@@ -36,6 +39,9 @@ timerVal = tic;
 rng('default');
 
 P = csvread(data_path);
+%%% Only for MNIST data which has been Fourier Transformed
+P = abs(P);
+%%%
 [d, n] = size(P);
 [~, file_name, ~] = fileparts(data_path);
 fprintf('\n');
@@ -94,18 +100,29 @@ switch algorithm_id
         display(['Algorithm chosen:' algorithm_name]);
         [selected, ~, dist_array, avg_dist_array, count_inactive] = algorithm(P, epsilon, stopping_func);        
         U = P(:, selected);
+        out.U = U;
+        out.dict_idx = selected;
     case 2
         algorithm_name = func2str(algorithm);
         display(['Algorithm chosen:' algorithm_name]);
         [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, epsilon, stopping_func);        
+        [~, dict_idx] = ismember(U', P', 'rows');
+        out.U = U;
+        out.dict_idx = dict_idx;
     case 3
         algorithm_name = func2str(algorithm);
         display(['Algorithm chosen:' algorithm_name]);
         [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 1, epsilon, max_sparsity, stopping_func);        
+        [~, dict_idx] = ismember(U', P', 'rows');
+        out.U = U;
+        out.dict_idx = dict_idx;
     case 4
         algorithm_name = [func2str(algorithm) 'perceptron'];
         display(['Algorithm chosen:' algorithm_name]);
         [U, dist_array, avg_dist_array, count_inactive] = algorithm(P, 2, epsilon, max_sparsity, stopping_func);
+        [~, dict_idx] = ismember(U', P', 'rows');
+        out.U = U;
+        out.dict_idx = dict_idx;
     case 5
         algorithm_name = func2str(algorithm);
         display(['Algorithm chosen:' algorithm_name]);
@@ -117,9 +134,13 @@ switch algorithm_id
         param1.InitializationMethod =  'DataElements';
         param1.displayProgress = 1;
         [U, output] = algorithm(P, param1);
+        out.U = U;
     case 6
         display(['Algorithm chosen:' algorithm]);
-        U = datasample(P, k, 2, 'Replace', false);        
+        U = datasample(P, k, 2, 'Replace', false);
+        [~, dict_idx] = ismember(U', P', 'rows');
+        out.U = U;
+        out.dict_idx = dict_idx;
     otherwise
         disp('Incorrect input');
         return
@@ -265,7 +286,7 @@ fprintf(fid, string);
 fclose(fid);
 
 string = [file_name ',' algorithm_name ',' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results9.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results10.csv', 'a');
 fprintf(fid, string);
 fclose(fid);    
 

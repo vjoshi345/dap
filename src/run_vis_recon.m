@@ -1,0 +1,10 @@
+load('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\to_publish\Visualizations\Dictionary\mnist1-ft_Dictionary_dch-max.mat');
+Y = csvread('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv');
+Y = abs(Y);
+D = abs(D);
+param.niter = 10;
+param.epsilon = 82.51119;
+blah = setdiff(Y', D', 'rows')';
+visualize_reconstruction(D, blah(:, 10), 1, param);
+visualize_reconstruction(D, blah(:, [50, 73]), 1, param);
+visualize_reconstruction(D, blah(:, [100, 158, 366, 513]), 1, param);

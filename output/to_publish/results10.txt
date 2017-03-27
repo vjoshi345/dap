@@ -1,0 +1,6 @@
+- results of applying the algorithms on mnist1-ft data
+- mnist1-ft = 2-D fourier transform applied on each image in mnist1 dataset
+- the magnitude of the fourier transform is used in further dictionary learning steps (phase is ignored)
+- we observe improvement in compression while slight worsening of sparsity. Also, the dictionary size has reduced 
+which is consistent with the observation that compression improves while sparsity worsens.
+- For KSVD we keep the same dictionary size (k = 50), so we see that sparsity also improves.

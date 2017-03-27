@@ -59,11 +59,13 @@ for i = 1:n
     subplot(2, curriter, 1:curriter);
     curr = reshape(Y(:, i), [shape, shape]);
     imshow(curr);
+    %imshow(ifft2(curr));
     title('Original point');
     for j = 1:curriter
         subplot(2, curriter, curriter+j);
         curr = reshape(recon(:, i, j), [shape, shape]);
         imshow(curr);
+        %imshow(ifft2(curr));
         title(['Sparsity:' num2str(j)]);
     end
     suptitle(['Reconstruction of a point using ' algorithm_name]);

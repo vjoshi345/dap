@@ -1,0 +1,12 @@
+Dataset,Algorithm,# points(n),# features(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Max actual sparsity,Sparsity coeff,Final cost,Max allowed sparsity(m),Stopping criterion
+,,,,,,,,,,,,,
+mnist1-ft,dp,1000,784,82.51119,727,784000,570241,0.72735,1,1,82.51055,1,max
+mnist1-ft,dch,1000,784,82.51119,139,784000,113939,0.14533,9,3.051,82.49485,10,max
+mnist1-ft,dchperceptron,1000,784,82.51119,133,784000,108873,0.13887,10,2.867,82.50976,10,max
+,,,,,,,,,,,,,
+mnist1-ft,dp,1000,784,82.51119,497,784000,390151,0.49764,1,1,41.49741,1,mean
+mnist1-ft,dl,1000,784,82.51119,124,784000,99844,0.12735,2,1.876,72.26693,2,mean
+mnist1-ft,dch,1000,784,82.51119,36,784000,36862,0.04702,5,4.837,82.06172,10,mean
+mnist1-ft,dchperceptron,1000,784,82.51119,36,784000,36856,0.04701,5,4.834,82.15813,10,mean
+mnist1-ft,dl,1000,784,82.51119,339,784000,267759,0.34153,2,1.661,82.47487,2,max
+mnist1-ft,KSVD,1000.00000,784.00000,82.51119,50.00000,784000.00000,42107.00000,0.05371,50.00000,2.90700,70.32775,50.00000,mean
