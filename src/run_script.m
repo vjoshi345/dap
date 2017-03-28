@@ -39,101 +39,95 @@
 %
 %
 
-Y = csvread('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv');
+%Y = csvread('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv');
 
 % param.max_sparsity = 1; param.stopping_criterion = 1;
-% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv', 1, param);
+% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 1, param);
 % idx = out.dict_idx;
 % D = Y(:, idx);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-ft_Dictionary_dp-max.mat', 'D');
-% [d, n] = size(D);
-% for i = 1:n
-%     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
-% end
-% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-ft - dp-max algorithm');
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dp-max.mat', 'D');
+% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-deskewed - dp-max algorithm');
 
+% clearvars -except Y;
 % param.max_sparsity = 2; param.stopping_criterion = 1;
-% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv', 2, param);
+% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 2, param);
 % idx = out.dict_idx;
 % D = Y(:, idx);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-ft_Dictionary_dl-max.mat', 'D');
-% [d, n] = size(D);
-% for i = 1:n
-%     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
-% end
-% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-ft - dl-max algorithm');
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dl-max.mat', 'D');
+% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-deskewed - dl-max algorithm');
 % 
-% param.max_sparsity = 10; param.stopping_criterion = 1;
-% [out] = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv', 3, param);
-% idx = out.dict_idx;
-% D = Y(:, idx);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-ft_Dictionary_dch-max.mat', 'D');
-% [d, n] = size(D);
-% for i = 1:n
-%     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
-% end
-% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-ft - dch-max algorithm');
+clearvars -except Y;
+param.max_sparsity = 10; param.stopping_criterion = 1;
+[out] = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 3, param);
+idx = out.dict_idx;
+D = Y(:, idx);
+save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dch-max.mat', 'D');
+%visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-deskewed - dch-max algorithm');
 
 % param.max_sparsity = 10; param.stopping_criterion = 1;
-% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv', 4, param);
+% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 4, param);
 % idx = out.dict_idx;
 % D = Y(:, idx);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-ft_Dictionary_dchperceptron-max.mat', 'D');
-% [d, n] = size(D);
-% for i = 1:n
-%     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
-% end
-% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-ft - dchperceptron-max algorithm');
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dchperceptron-max.mat', 'D');
+% % [d, n] = size(D);
+% % for i = 1:n
+% %     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
+% % end
+% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-deskewed - dchperceptron-max algorithm');
 
+% clearvars -except Y;
 % param.max_sparsity = 1; param.stopping_criterion = 2;
-% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv', 1, param);
+% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 1, param);
 % idx = out.dict_idx;
 % D = Y(:, idx);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-ft_Dictionary_dp-mean.mat', 'D');
-% [d, n] = size(D);
-% for i = 1:n
-%     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
-% end
-% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-ft - dp-mean algorithm');
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dp-mean.mat', 'D');
+% % [d, n] = size(D);
+% % for i = 1:n
+% %     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
+% % end
+% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-deskewed - dp-mean algorithm');
 
+% clearvars -except Y;
 % param.max_sparsity = 2; param.stopping_criterion = 2;
-% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv', 2, param);
+% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 2, param);
 % idx = out.dict_idx;
 % D = Y(:, idx);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-ft_Dictionary_dl-mean.mat', 'D');
-% [d, n] = size(D);
-% for i = 1:n
-%     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
-% end
-% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-ft - dl-mean algorithm');
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dl-mean.mat', 'D');
+% % [d, n] = size(D);
+% % for i = 1:n
+% %     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
+% % end
+% visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-deskewed - dl-mean algorithm');
 
+% clearvars -except Y;
 % param.max_sparsity = 10; param.stopping_criterion = 2;
-% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv', 3, param);
+% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 3, param);
 % idx = out.dict_idx;
 % D = Y(:, idx);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-ft_Dictionary_dch-mean.mat', 'D');
-% [d, n] = size(D);
-% for i = 1:n
-%     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
-% end
-% visualize_dict(D, 20, 28, 28, 'Dictionary atoms for mnist1-ft - dch-mean algorithm');
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dch-mean.mat', 'D');
+% % [d, n] = size(D);
+% % for i = 1:n
+% %     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
+% % end
+% visualize_dict(D, 20, 28, 28, 'Dictionary atoms for mnist1-deskewed - dch-mean algorithm');
 
+% clearvars -except Y;
 % param.max_sparsity = 10; param.stopping_criterion = 2;
-% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv', 4, param);
+% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 4, param);
 % idx = out.dict_idx;
 % D = Y(:, idx);
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-ft_Dictionary_dchperceptron-mean.mat', 'D');
-% [d, n] = size(D);
-% for i = 1:n
-%     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
-% end
-% visualize_dict(D, 20, 28, 28, 'Dictionary atoms for mnist1-ft - dchperceptron-mean algorithm');
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dchperceptron-mean.mat', 'D');
+% % [d, n] = size(D);
+% % for i = 1:n
+% %     D(:, i) = reshape(ifft2(reshape(D(:, i), [28 28]), 'symmetric'), [d 1]);
+% % end
+% visualize_dict(D, 20, 28, 28, 'Dictionary atoms for mnist1-deskewed - dchperceptron-mean algorithm');
 
-param.dictionary_size = 50;
-out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-ft.csv', 5, param);
-D = out.U;
-save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-ft_Dictionary_KSVD.mat', 'D');
-visualize_dict(D, 50, 28, 28, 'Dictionary atoms for mnist1-ft - KSVD algorithm');
+% param.dictionary_size = 50;
+% out = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 5, param);
+% D = out.U;
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_KSVD.mat', 'D');
+% visualize_dict(D, 50, 28, 28, 'Dictionary atoms for mnist1-deskewed - KSVD algorithm');
 
 %
 %
@@ -171,10 +165,25 @@ visualize_dict(D, 50, 28, 28, 'Dictionary atoms for mnist1-ft - KSVD algorithm')
 
 
 
+% param.stopping_criterion = 1;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\NY_SAT_2010-norm.csv', 1, param);
+% param.stopping_criterion = 2;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\NY_SAT_2010-norm.csv', 1, param);
+% param.stopping_criterion = 1;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\NY_SAT_2010-norm.csv', 2, param);
+% param.stopping_criterion = 2;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\NY_SAT_2010-norm.csv', 2, param);
+% param.stopping_criterion = 1; param.max_sparsity = 10;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\NY_SAT_2010-norm.csv', 3, param);
+% param.stopping_criterion = 2; param.max_sparsity = 10;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\NY_SAT_2010-norm.csv', 3, param);
+% param.stopping_criterion = 1; param.max_sparsity = 10;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\NY_SAT_2010-norm.csv', 4, param);
+% param.stopping_criterion = 2; param.max_sparsity = 10;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\NY_SAT_2010-norm.csv', 4, param);
 
 
-%main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 5);
-%main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist3.csv', 5);
+
 
 
 

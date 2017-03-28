@@ -1,0 +1,4 @@
+- results of applying the algorithms on mnist1-deskewed data
+- surprisingly we don't see an improvement in compression or sparsity (there is slight worsening of both).
+However, we can now visualize the reconstruction process properly (without the error that a digit is reconstructed using some other digits)
+- also included are results of applying the algos on NYC_SAT_2010 dataset

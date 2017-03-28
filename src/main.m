@@ -40,7 +40,7 @@ rng('default');
 
 P = csvread(data_path);
 %%% Only for MNIST data which has been Fourier Transformed
-P = abs(P);
+%%%P = abs(P);
 %%%
 [d, n] = size(P);
 [~, file_name, ~] = fileparts(data_path);
@@ -286,7 +286,7 @@ fprintf(fid, string);
 fclose(fid);
 
 string = [file_name ',' algorithm_name ',' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results10.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results11.csv', 'a');
 fprintf(fid, string);
 fclose(fid);    
 
