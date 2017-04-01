@@ -56,12 +56,12 @@
 % save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dl-max.mat', 'D');
 % visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-deskewed - dl-max algorithm');
 % 
-clearvars -except Y;
-param.max_sparsity = 10; param.stopping_criterion = 1;
-[out] = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 3, param);
-idx = out.dict_idx;
-D = Y(:, idx);
-save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dch-max.mat', 'D');
+% clearvars -except Y;
+% param.max_sparsity = 10; param.stopping_criterion = 1;
+% [out] = main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist1-deskewed.csv', 3, param);
+% idx = out.dict_idx;
+% D = Y(:, idx);
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Dictionary_dch-max.mat', 'D');
 %visualize_dict(D, 100, 28, 28, 'Dictionary atoms for mnist1-deskewed - dch-max algorithm');
 
 % param.max_sparsity = 10; param.stopping_criterion = 1;
@@ -183,7 +183,10 @@ save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist1-deskewed_Di
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\NY_SAT_2010-norm.csv', 4, param);
 
 
-
+% dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 1, param)
+dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 2, param)
+dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 3, param)
+dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 4, param)
 
 
 
