@@ -11,7 +11,9 @@ function [error] = dl_nn_classif(data_path, labels_path, dl_algo, param)
 %       stopping_func - (optional) either @max or @mean - to be used as the
 %                       stopping criterion (default = @max)
 %       nneigbours    - (optional)#neigbours to take majority vote on 
-%                       (default=1)
+%                       (default=1). If nneighbours = -1, then
+%                       takes majority vote on the 10 atoms in the sparse
+%                       coding of the datapoint
 %   
 %   OUTPUT:
 %   error - classification error on the data
@@ -44,8 +46,16 @@ display(['Stopping function=' func2str(stopping_func)]);
 
 if (~isfield(param, 'nneighbours'))
     nneighbours = 1;
-else
+else    
     nneighbours = param.nneighbours;
+    if nneighbours == -1
+        assert(dl_algo == 3 || dl_algo == 4, 'For variable nneighbours need to use either dch or dchperceptron!');        
+        if dl_algo == 3
+            method = @compute_dist_chull;
+        else
+            method = @compute_dist_chull_perceptron;
+        end
+    end
 end
 display(['# neighbours=' num2str(nneighbours)]);
 
@@ -58,7 +68,8 @@ switch dl_algo
         display(['Algorithm chosen:' algorithm_name]);
         [selected, ~, ~, ~, ~] = algorithm(Y, epsilon, stopping_func);        
         D = Y(:, selected);
-        dict_idx = selected;
+        temp = 1:n;
+        dict_idx = temp(selected);
     case 2
         algorithm_name = [func2str(algorithm) '-' func2str(stopping_func)];
         display(['Algorithm chosen:' algorithm_name]);
@@ -85,14 +96,26 @@ unselected = setdiff(1:n, dict_idx);
 X = Y(:, unselected);
 labels_D = labels(dict_idx);
 labels_X = labels(unselected);
+
 %----------- NN-CLASSIFICATION ------------------
-if nneighbours == 1
-    [~, pred_idx] = pdist2(D', X', 'euclidean', 'Smallest', 1);
-    pred = labels_D(pred_idx);
+if nneighbours >= 1
+    [~, pred_idx] = pdist2(D', X', 'euclidean', 'Smallest', nneighbours);
+    pred = zeros(n-k, 1);
+    for i = 1:(n-k)
+        index = pred_idx(:, i);
+        index = index(index > 0);
+        pred(i) = mode(labels_D(index));
+    end
     error = sum(~(pred == labels_X))*100/(n-k);
 else
-    %
-    %
+    [~, ~, atom_idx] = method(D, X, 10);
+    pred = zeros(n-k, 1);
+    for i = 1:(n-k)
+        index = atom_idx(:, i);
+        index = index(index > 0);
+        pred(i) = mode(labels_D(index));
+    end
+    error = sum(~(pred == labels_X))*100/(n-k);
 end
 
 results = [n, d, epsilon, k, nneighbours, error];

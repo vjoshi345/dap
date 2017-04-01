@@ -183,9 +183,9 @@
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\NY_SAT_2010-norm.csv', 4, param);
 
 
-dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 1, param)
-dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 2, param)
-dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 3, param)
+% dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 1, param)
+% dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 2, param)
+% dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 3, param)
 dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 4, param)
 
 

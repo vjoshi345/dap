@@ -25,6 +25,7 @@ function [U, dist_array, avg_dist_array, count_inactive] = dch(P, method_id, eps
 %   TODO:
 %   Modify this code to return the sparse code in addition to the learned
 %   dictionary.
+%
 
 tic;
 % Choose the method to get distance to convex hull

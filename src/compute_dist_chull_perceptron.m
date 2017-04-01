@@ -1,4 +1,4 @@
-function [dist, t] = compute_dist_chull_perceptron(P, q, niter)
+function [dist, t, atom_idx] = compute_dist_chull_perceptron(P, q, niter)
 % COMPUTE_DIST_CHULL_PERCEPTRON - Calculates the distance of a set of query 
 % points to the convex hull of a set of points using the perceptron method.
 %
@@ -11,8 +11,10 @@ function [dist, t] = compute_dist_chull_perceptron(P, q, niter)
 %            reconstruction
 %
 %    OUTPUT:
-%    dist - the vector of evaluated distances (1xn)
-%    t    - the matrix of reconstructed points (dxn)
+%    dist     - the vector of evaluated distances (1xn)
+%    t        - the matrix of reconstructed points (dxn)
+%    atom_idx - matrix of dictionary atoms (indicies) chosen during the
+%               sparse coding stage (niter x #query points)
 %
 %   TODO:
 %   Need to check different possible interpretations of the perceptron
@@ -20,9 +22,13 @@ function [dist, t] = compute_dist_chull_perceptron(P, q, niter)
 %   of the variations).
 %
 
+[~, n] = size(q);
+atom_idx = zeros(niter, n);
+
 % Initial condition - find points t in P which are closest to query points 
 [~, min_index] = pdist2(P', q', 'euclidean', 'Smallest', 1);
 t = P(:, min_index); % Matrix of closest points
+atom_idx(1, :) = min_index; 
 for i = 1:(niter-1)
     % Find the next best point to add in t
     temp = i*t;
@@ -38,6 +44,7 @@ for i = 1:(niter-1)
     
     % Adding the qualified points in t 
     t(:, qual_index) = (temp(:, qual_index) + points(:, qual_index))/(i + 1);
+    atom_idx(i+1, :) = qual_index;
 end
 dist = sqrt(sum((t-q).^2, 1));
 end
