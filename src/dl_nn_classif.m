@@ -108,13 +108,36 @@ if nneighbours >= 1
     end
     error = sum(~(pred == labels_X))*100/(n-k);
 else
-    [~, ~, atom_idx] = method(D, X, 10);
-    pred = zeros(n-k, 1);
-    for i = 1:(n-k)
-        index = atom_idx(:, i);
-        index = index(index > 0);
-        pred(i) = mode(labels_D(index));
+    count_atoms = ones(n-k, 1);
+    recon = zeros(d, n-k);
+    covered_id = [];
+    for j = 1:10            
+        [dist, t, atom_idx] = method(D, X, j);
+        if isequal(stopping_func, @max)
+            threshold = epsilon;
+        else
+            threshold = 2*epsilon - max(dist);
+        end
+        threshold = max(threshold, 0);
+        if j < 10
+            count_atoms(dist > threshold) = count_atoms(dist > threshold) + 1;
+        end
+        new_id = setdiff(find(dist <= threshold), covered_id);
+        recon(:, new_id) = t(:, new_id);
+        covered_id = [covered_id new_id];
     end
+    
+    %[~, ~, atom_idx] = method(D, X, 10);
+%     pred = zeros(n-k, 1);
+%     for i = 1:(n-k)
+%         index = atom_idx(:, i);
+%         index = index(index > 0);
+%         max_id = min(count_atoms(i), size(index, 1));
+%         index = index(1:max_id);
+%         pred(i) = mode(labels_D(index));
+%     end
+    [~, pred_idx] = pdist2(D', recon', 'euclidean', 'Smallest', 1);
+    pred = labels_D(pred_idx);
     error = sum(~(pred == labels_X))*100/(n-k);
 end
 
