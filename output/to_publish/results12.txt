@@ -1,0 +1,6 @@
+- results of various classification schemes using the dictionary learnt on mnist2 and mnist2-deskewed datasets
+- Following classification schemes are used:
+1) kNN classification using dictionary atoms (w/ majority voting)
+2) majority voting over 10 atoms(for all points) used in reconstruction for dch and dchperceptron
+3) majority voting over variable #atoms (depends on #atoms in the reconstruction of a point) used in reconstruction for dch and dchperceptron
+4) 1NN classification on the reconstructed point

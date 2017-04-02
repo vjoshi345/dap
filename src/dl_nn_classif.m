@@ -68,30 +68,28 @@ switch dl_algo
         display(['Algorithm chosen:' algorithm_name]);
         [selected, ~, ~, ~, ~] = algorithm(Y, epsilon, stopping_func);        
         D = Y(:, selected);
-        temp = 1:n;
-        dict_idx = temp(selected);
     case 2
         algorithm_name = [func2str(algorithm) '-' func2str(stopping_func)];
         display(['Algorithm chosen:' algorithm_name]);
         [D, ~, ~, ~] = algorithm(Y, epsilon, stopping_func);        
-        [~, dict_idx] = ismember(D', Y', 'rows');
     case 3
         algorithm_name = [func2str(algorithm) '-' func2str(stopping_func)];
         display(['Algorithm chosen:' algorithm_name]);
         [D, ~, ~, ~] = algorithm(Y, 1, epsilon, 10, stopping_func);        
-        [~, dict_idx] = ismember(D', Y', 'rows');
     case 4
         algorithm_name = [func2str(algorithm) 'perceptron-' func2str(stopping_func)];
         display(['Algorithm chosen:' algorithm_name]);
         [D, ~, ~, ~] = algorithm(Y, 2, epsilon, 10, stopping_func);
-        [~, dict_idx] = ismember(D', Y', 'rows');
     otherwise
         disp('Incorrect input');
         return
 end
 k = size(D, 2);
 disp(['Size of dictionary learned:' num2str(k)]);
+% 
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist2-deskewed_Dictionary_dl-mean.mat', 'D');
 
+[~, dict_idx] = ismember(D', Y', 'rows');
 unselected = setdiff(1:n, dict_idx);
 X = Y(:, unselected);
 labels_D = labels(dict_idx);
