@@ -4,3 +4,4 @@
 2) majority voting over 10 atoms(for all points) used in reconstruction for dch and dchperceptron
 3) majority voting over variable #atoms (depends on #atoms in the reconstruction of a point) used in reconstruction for dch and dchperceptron
 4) 1NN classification on the reconstructed point
+5) Take a random subset of dictionary and then classify other points using kNN on dictionary atoms

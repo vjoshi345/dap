@@ -2,12 +2,12 @@ function [error] = dl_nn_classif(data_path, labels_path, dl_algo, param)
 % DL_NN_CLASSIF Dictionary learning based nearest neighbour classification.
 %   
 %   INPUT:
-%   data    - classpath to the input dataset as a matrix with columns as
-%             datapoints and rows as features
-%   labels  - classpath to the class labels for the points
-%   dl_algo - algorithm used for dictionary learning
-%             1-dp, 2-dl, 3-dch, 4-dchperceptron
-%   param   - number of optional arguments as a struct
+%   data_path   - classpath to the input dataset as a matrix with columns as
+%                 datapoints and rows as features
+%   labels_path - classpath to the class labels for the points
+%   dl_algo     - algorithm used for dictionary learning
+%                 1-dp, 2-dl, 3-dch, 4-dchperceptron
+%   param       - number of optional arguments as a struct
 %       stopping_func - (optional) either @max or @mean - to be used as the
 %                       stopping criterion (default = @max)
 %       nneigbours    - (optional)#neigbours to take majority vote on 
