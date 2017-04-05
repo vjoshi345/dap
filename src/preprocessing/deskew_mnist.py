@@ -32,19 +32,17 @@ def deskew(image):
     return interpolation.affine_transform(image,affine,offset=offset)
 
 
-data = genfromtxt('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', delimiter=',')
+data = genfromtxt('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist4.csv', delimiter=',')
 print type(data)
 d, n = data.shape[0], data.shape[1]
 print d, n
-
-#print np.array_equal(data[:, 150], data[:, 150].reshape((28,28), order='F').flatten(order='F'))
 
 deskewed = np.zeros(shape=(d,n))
 for i in range(n):
     deskewed[:, i] = deskew(data[:, i].reshape((28,28), order='F')).flatten(order='F')
 
 #plt.imshow(deskewed[:, 5].reshape((28,28), order='F'), cmap='gray')
-np.savetxt(fname='mnist2-deskewed.csv', X=deskewed, delimiter=',', fmt='%6.6f')
+np.savetxt(fname='mnist4-deskewed.csv', X=deskewed, delimiter=',', fmt='%6.6f')
 
 for i in range(50):
     plt.subplot(1, 2, 1)
@@ -53,7 +51,7 @@ for i in range(50):
     plt.subplot(1, 2, 2)
     plt.imshow(deskew(data[:, i].reshape((28,28), order='F')), cmap='gray')
     
-    name = 'Deskewed-mnist2\image' + str(i) + '.png'
+    name = 'Deskewed-mnist4\image' + str(i) + '.png'
     plt.savefig(name)
 
 

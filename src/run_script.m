@@ -188,8 +188,8 @@
 % dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 3, param)
 % dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 4, param)
 
-for i = [1361, 824, 443, 428, 973, 384, 190, 191]
+for i = [6732, 4609]
     for j = [45, 40, 35, 30, 25, 20, 15, 10, 5, 1]
-        random_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', i, j)
+        random_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist4-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist4labels.csv', i, j)
     end
 end

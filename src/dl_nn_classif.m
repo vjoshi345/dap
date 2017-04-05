@@ -86,8 +86,8 @@ switch dl_algo
 end
 k = size(D, 2);
 disp(['Size of dictionary learned:' num2str(k)]);
-% 
-% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist2-deskewed_Dictionary_dl-mean.mat', 'D');
+
+% save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist4-deskewed_Dictionary_dp-mean.mat', 'D');
 
 [~, dict_idx] = ismember(D', Y', 'rows');
 unselected = setdiff(1:n, dict_idx);
@@ -159,5 +159,5 @@ fclose(fid);
 
 
 
-end
+% end
 

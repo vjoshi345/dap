@@ -48,7 +48,7 @@ end
 error = sum(~(pred == labels_X))*100/(n-k);
 
 %------------- STORE RESULTS -----------------------
-epsilon = 4.40851;
+epsilon = 4.12032;
 results = [n, d, epsilon, k, nneighbours, error];
 string = sprintf('%0.5f,', results);
 string = [file_name ',' 'randomized,' string '\n'];
