@@ -1,0 +1,9 @@
+Dataset,Algorithm,# points(n),# features(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Max actual sparsity,Sparsity coeff,Final cost,Max allowed sparsity(m),Stopping criterion
+SAT_Results_2012-norm,dp,421,3,8.30881,233,1263,887,0.702,1,1.0,8.30662,1,max
+SAT_Results_2012-norm,dl,421,3,8.30881,24,1263,1263,1.000,2,1.9,8.1743,2,max
+SAT_Results_2012-norm,dch,421,3,8.30881,137,1263,1055,0.835,3,1.4,8.30662,3,max
+SAT_Results_2012-norm,dchperceptron,421,3,8.30881,97,1263,1449,1.147,3,2.0,8.30662,3,max
+SAT_Results_2012-norm,dp,421,3,8.30881,152,1263,725,0.574,1,1.0,5.30877,1,mean
+SAT_Results_2012-norm,dl,421,3,8.30881,10,1263,1263,1.000,2,2.0,7.49271,2,mean
+SAT_Results_2012-norm,dch,421,3,8.30881,46,1263,2013,1.594,3,2.8,7.27114,3,mean
+SAT_Results_2012-norm,dchperceptron,421,3,8.30881,38,1263,2029,1.606,3,2.8,7.5329,3,mean

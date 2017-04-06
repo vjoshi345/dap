@@ -1,92 +1,92 @@
-function [error] = dl_nn_classif(data_path, labels_path, dl_algo, param)
-% DL_NN_CLASSIF Dictionary learning based nearest neighbour classification.
-%   
-%   INPUT:
-%   data_path   - classpath to the input dataset as a matrix with columns as
-%                 datapoints and rows as features
-%   labels_path - classpath to the class labels for the points
-%   dl_algo     - algorithm used for dictionary learning
-%                 1-dp, 2-dl, 3-dch, 4-dchperceptron
-%   param       - number of optional arguments as a struct
-%       stopping_func - (optional) either @max or @mean - to be used as the
-%                       stopping criterion (default = @max)
-%       nneigbours    - (optional)#neigbours to take majority vote on 
-%                       (default=1). If nneighbours = -1, then
-%                       takes majority vote on the 10 atoms in the sparse
-%                       coding of the datapoint
-%   
-%   OUTPUT:
-%   error - classification error on the data
-%
-
-rng('default');
-
-Y = csvread(data_path);
-[d, n] = size(Y);
-labels = csvread(labels_path);
-assert(size(labels, 1) == n, '#labels does not equal #points!');
-
-[~, file_name, ~] = fileparts(data_path);
-fprintf('\n');
-fprintf('-------------------------------------------------------------\n');
-display(['Dataset name:' file_name]);
-display(['No. of points(n):' num2str(n)]);
-display(['No. of dimensions(d):' num2str(d)]);
-
-closest = pdist2(Y', Y', 'euclidean', 'Smallest', 2);
-epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
-display(['Error tolerance (epsilon)=' num2str(epsilon)]);
-
-if (~isfield(param, 'stopping_func'))
-    stopping_func = @max;
-else
-    stopping_func = param.stopping_func;
-end
-display(['Stopping function=' func2str(stopping_func)]);
-
-if (~isfield(param, 'nneighbours'))
-    nneighbours = 1;
-else    
-    nneighbours = param.nneighbours;
-    if nneighbours == -1
-        assert(dl_algo == 3 || dl_algo == 4, 'For variable nneighbours need to use either dch or dchperceptron!');        
-        if dl_algo == 3
-            method = @compute_dist_chull;
-        else
-            method = @compute_dist_chull_perceptron;
-        end
-    end
-end
-display(['# neighbours=' num2str(nneighbours)]);
-
-%--------- DICTIONARY LEARNING ---------------
-algorithm_list = {@dp, @dl, @dch, @dch};
-algorithm = algorithm_list{dl_algo};
-switch dl_algo
-    case 1
-        algorithm_name = [func2str(algorithm) '-' func2str(stopping_func)];
-        display(['Algorithm chosen:' algorithm_name]);
-        [selected, ~, ~, ~, ~] = algorithm(Y, epsilon, stopping_func);        
-        D = Y(:, selected);
-    case 2
-        algorithm_name = [func2str(algorithm) '-' func2str(stopping_func)];
-        display(['Algorithm chosen:' algorithm_name]);
-        [D, ~, ~, ~] = algorithm(Y, epsilon, stopping_func);        
-    case 3
-        algorithm_name = [func2str(algorithm) '-' func2str(stopping_func)];
-        display(['Algorithm chosen:' algorithm_name]);
-        [D, ~, ~, ~] = algorithm(Y, 1, epsilon, 10, stopping_func);        
-    case 4
-        algorithm_name = [func2str(algorithm) 'perceptron-' func2str(stopping_func)];
-        display(['Algorithm chosen:' algorithm_name]);
-        [D, ~, ~, ~] = algorithm(Y, 2, epsilon, 10, stopping_func);
-    otherwise
-        disp('Incorrect input');
-        return
-end
+% function [error] = dl_nn_classif(data_path, labels_path, dl_algo, param)
+% % DL_NN_CLASSIF Dictionary learning based nearest neighbour classification.
+% %   
+% %   INPUT:
+% %   data_path   - classpath to the input dataset as a matrix with columns as
+% %                 datapoints and rows as features
+% %   labels_path - classpath to the class labels for the points
+% %   dl_algo     - algorithm used for dictionary learning
+% %                 1-dp, 2-dl, 3-dch, 4-dchperceptron
+% %   param       - number of optional arguments as a struct
+% %       stopping_func - (optional) either @max or @mean - to be used as the
+% %                       stopping criterion (default = @max)
+% %       nneigbours    - (optional)#neigbours to take majority vote on 
+% %                       (default=1). If nneighbours = -1, then
+% %                       takes majority vote on the 10 atoms in the sparse
+% %                       coding of the datapoint
+% %   
+% %   OUTPUT:
+% %   error - classification error on the data
+% %
+% 
+% rng('default');
+% 
+% Y = csvread(data_path);
+% [d, n] = size(Y);
+% labels = csvread(labels_path);
+% assert(size(labels, 1) == n, '#labels does not equal #points!');
+% 
+% [~, file_name, ~] = fileparts(data_path);
+% fprintf('\n');
+% fprintf('-------------------------------------------------------------\n');
+% display(['Dataset name:' file_name]);
+% display(['No. of points(n):' num2str(n)]);
+% display(['No. of dimensions(d):' num2str(d)]);
+% 
+% closest = pdist2(Y', Y', 'euclidean', 'Smallest', 2);
+% epsilon = mean(closest(2, :)); % Avg distance between pairs of closest points
+% display(['Error tolerance (epsilon)=' num2str(epsilon)]);
+% 
+% if (~isfield(param, 'stopping_func'))
+%     stopping_func = @max;
+% else
+%     stopping_func = param.stopping_func;
+% end
+% display(['Stopping function=' func2str(stopping_func)]);
+% 
+% if (~isfield(param, 'nneighbours'))
+%     nneighbours = 1;
+% else    
+%     nneighbours = param.nneighbours;
+%     if nneighbours == -1
+%         assert(dl_algo == 3 || dl_algo == 4, 'For variable nneighbours need to use either dch or dchperceptron!');        
+%         if dl_algo == 3
+%             method = @compute_dist_chull;
+%         else
+%             method = @compute_dist_chull_perceptron;
+%         end
+%     end
+% end
+% display(['# neighbours=' num2str(nneighbours)]);
+% 
+% %--------- DICTIONARY LEARNING ---------------
+% algorithm_list = {@dp, @dl, @dch, @dch};
+% algorithm = algorithm_list{dl_algo};
+% switch dl_algo
+%     case 1
+%         algorithm_name = [func2str(algorithm) '-' func2str(stopping_func)];
+%         display(['Algorithm chosen:' algorithm_name]);
+%         [selected, ~, ~, ~, ~] = algorithm(Y, epsilon, stopping_func);        
+%         D = Y(:, selected);
+%     case 2
+%         algorithm_name = [func2str(algorithm) '-' func2str(stopping_func)];
+%         display(['Algorithm chosen:' algorithm_name]);
+%         [D, ~, ~, ~] = algorithm(Y, epsilon, stopping_func);        
+%     case 3
+%         algorithm_name = [func2str(algorithm) '-' func2str(stopping_func)];
+%         display(['Algorithm chosen:' algorithm_name]);
+%         [D, ~, ~, ~] = algorithm(Y, 1, epsilon, 10, stopping_func);        
+%     case 4
+%         algorithm_name = [func2str(algorithm) 'perceptron-' func2str(stopping_func)];
+%         display(['Algorithm chosen:' algorithm_name]);
+%         [D, ~, ~, ~] = algorithm(Y, 2, epsilon, 10, stopping_func);
+%     otherwise
+%         disp('Incorrect input');
+%         return
+% end
 k = size(D, 2);
 disp(['Size of dictionary learned:' num2str(k)]);
-
+% 
 % save('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\mnist4-deskewed_Dictionary_dp-mean.mat', 'D');
 
 [~, dict_idx] = ismember(D', Y', 'rows');
@@ -106,6 +106,9 @@ if nneighbours >= 1
     end
     error = sum(~(pred == labels_X))*100/(n-k);
 else
+    
+    % Keeping track of reconstructed point and how many atoms needed for
+    % reconstrucing a point
     count_atoms = ones(n-k, 1);
     recon = zeros(d, n-k);
     covered_id = [];
@@ -125,17 +128,30 @@ else
         covered_id = [covered_id new_id];
     end
     
-    %[~, ~, atom_idx] = method(D, X, 10);
-%     pred = zeros(n-k, 1);
-%     for i = 1:(n-k)
-%         index = atom_idx(:, i);
-%         index = index(index > 0);
-%         max_id = min(count_atoms(i), size(index, 1));
-%         index = index(1:max_id);
-%         pred(i) = mode(labels_D(index));
-%     end
-    [~, pred_idx] = pdist2(D', recon', 'euclidean', 'Smallest', 1);
-    pred = labels_D(pred_idx);
+%     % Scheme-1 Fixed sparsity = 10 for each point
+%     [~, ~, atom_idx] = method(D, X, 10);
+    
+    % Scheme-2 Variable sparsity + majority voting (w/ weighting by distance)
+    pred = zeros(n-k, 1);
+    for i = 1:(n-k)
+        index = atom_idx(:, i);
+        index = index(index > 0);
+        max_id = min(count_atoms(i), size(index, 1));
+        index = index(1:max_id);
+        % Weighting by distance
+        weights = sqrt(sum(bsxfun(@minus, X(:, i), D(:, index)).^2, 1))';
+        weights = 1./weights;
+        weights = weights/sum(weights);
+        [pot_labels, ~, ic] = unique(labels_D(index));
+        weights_by_labels = accumarray(ic, weights, size(pot_labels), @(x) sum(x));
+        [~, idx_label] = max(weights_by_labels);
+        pred(i) = pot_labels(idx_label);       
+        %pred(i) = mode(labels_D(index));
+    end
+    
+%     % Scheme-3 Using kNN on the reconstructed point
+%     [~, pred_idx] = pdist2(D', recon', 'euclidean', 'Smallest', 1);
+%     pred = labels_D(pred_idx);
     error = sum(~(pred == labels_X))*100/(n-k);
 end
 

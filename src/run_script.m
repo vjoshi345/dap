@@ -188,8 +188,53 @@
 % dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 3, param)
 % dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 4, param)
 
-for i = [6732, 4609]
-    for j = [45, 40, 35, 30, 25, 20, 15, 10, 5, 1]
-        random_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist4-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist4labels.csv', i, j)
-    end
-end
+% for i = [6732, 4609]
+%     for j = [45, 40, 35, 30, 25, 20, 15, 10, 5, 1]
+%         random_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist4-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist4labels.csv', i, j)
+%     end
+% end
+
+
+% param.stopping_criterion = 1;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\SAT_Results_2012-norm.csv', 1, param);
+% param.stopping_criterion = 1;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\SAT_Results_2012-norm.csv', 2, param);
+% param.stopping_criterion = 1;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\SAT_Results_2012-norm.csv', 3, param);
+% param.stopping_criterion = 1;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\SAT_Results_2012-norm.csv', 4, param);
+% 
+% param.stopping_criterion = 2;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\SAT_Results_2012-norm.csv', 1, param);
+% param.stopping_criterion = 2;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\SAT_Results_2012-norm.csv', 2, param);
+% param.stopping_criterion = 2;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\SAT_Results_2012-norm.csv', 3, param);
+% param.stopping_criterion = 2;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\SAT_Results_2012-norm.csv', 4, param);
+
+param.dictionary_size = 100; param.stopping_criterion = 2;
+main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\SAT_Results_2012-norm.csv', 5, param);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -151,28 +151,28 @@ disp(['Size of dictionary learned:' num2str(k)]);
 
 % Plot the distance as a function of dictionary size (only for dp, dl and
 % dch)
-if algorithm_id < 5
-    % Plot and save distance (max and average) as a function of the size of 
-    % the dictionary size
-    distance_figure = figure('visible', 'off');
-
-    subplot(2, 1, 1);
-    plot(dist_array);
-    title([file_name '\_' algorithm_name '\_distance\_epsilon=' num2str(epsilon) '\_maxsparsity=' num2str(max_sparsity) '\_stoppingcriterion=' func2str(stopping_func)]);
-    xlabel('No. of points in U');
-    hold on;
-    plot(avg_dist_array, 'green');
-    legend('Max dist', 'Avg dist');
-    hold off;
-
-    subplot(2, 1, 2);
-    plot(count_inactive);
-    title(['Count of total inactive points in (P + U) (<= epsilon), epsilon = ' num2str(epsilon)]);
-    xlabel('No. of points in U');
-    legend('Inactive points', 'Location', 'NorthWest');
-
-    saveas(distance_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_distance_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.jpg']);
-end
+% if algorithm_id < 5
+%     % Plot and save distance (max and average) as a function of the size of 
+%     % the dictionary size
+%     distance_figure = figure('visible', 'off');
+% 
+%     subplot(2, 1, 1);
+%     plot(dist_array);
+%     title([file_name '\_' algorithm_name '\_distance\_epsilon=' num2str(epsilon) '\_maxsparsity=' num2str(max_sparsity) '\_stoppingcriterion=' func2str(stopping_func)]);
+%     xlabel('No. of points in U');
+%     hold on;
+%     plot(avg_dist_array, 'green');
+%     legend('Max dist', 'Avg dist');
+%     hold off;
+% 
+%     subplot(2, 1, 2);
+%     plot(count_inactive);
+%     title(['Count of total inactive points in (P + U) (<= epsilon), epsilon = ' num2str(epsilon)]);
+%     xlabel('No. of points in U');
+%     legend('Inactive points', 'Location', 'NorthWest');
+% 
+%     saveas(distance_figure, ['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_distance_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.jpg']);
+% end
 
 % Get the sparsity level when @dch is used and plot the average distance vs
 % sparsity level. Note that for @dp and @dl, sparsity level is one and two 
@@ -275,18 +275,18 @@ compression_ratio = memory_final/memory_initial;
 results = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sparsity_level, sparsity_coeff, final_cost, max_sparsity];
 string = sprintf('%0.5f,', results);
 string = [string func2str(stopping_func)];
-if exist(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'file') == 0
-    header = 'No. of points(n),No. of dimensions(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Actual max sparsity,Sparsity coeff,Final cost,Max allowed sparsity(m),Stopping criterion\n';
-    fid = fopen(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'w');
-    fprintf(fid, header);
-    fclose(fid);
-end
-fid = fopen(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'a');
-fprintf(fid, string);
-fclose(fid);
+% if exist(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'file') == 0
+%     header = 'No. of points(n),No. of dimensions(d),Error tolerance(epsilon),Dictionary size(k),Initial memory,Final memory,Compression ratio,Actual max sparsity,Sparsity coeff,Final cost,Max allowed sparsity(m),Stopping criterion\n';
+%     fid = fopen(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'w');
+%     fprintf(fid, header);
+%     fclose(fid);
+% end
+% fid = fopen(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'a');
+% fprintf(fid, string);
+% fclose(fid);
 
 string = [file_name ',' algorithm_name ',' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results11.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results13.csv', 'a');
 fprintf(fid, string);
 fclose(fid);    
 
