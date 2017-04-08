@@ -94,9 +94,8 @@ fclose(fid);
 % data
 data = data(:, store_index);
 % index = randi([1 size(data, 1)], 1, ndocs);
-[n, ~] = size(data);
-index = datasample(1:n, ndocs, 'Replace', false);
-subset = data(index, :);
+% subset = data(index, :);
+subset = 
 
 % Normalize the dataset to have all feature values between 0 and 1
 [~, d] = size(subset);
