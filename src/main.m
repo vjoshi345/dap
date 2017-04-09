@@ -192,22 +192,25 @@ end
 switch algorithm_id
     case 1
         sparsity_level = 1;
-        memory_final = k*(d-1) + n;
+        memory_final_1 = k*(d-1) + n;
         D = method(U', P', 'Euclidean', 'Smallest', 1);
         final_cost = stopping_func(D);
         sparsity_coeff = (k + (n-k)*sparsity_level)/n;
+        memory_final_2 = d*k + n*sparsity_coeff;
     case 2
         sparsity_level = 2;
-        memory_final = k*(d-3) + 3*n;
+        memory_final_1 = k*(d-3) + 3*n;
         D = method(U, P);
         final_cost = stopping_func(D);
         sparsity_coeff = (k + (n-k)*sparsity_level)/n;
+        memory_final_2 = d*k + n*sparsity_coeff;
     case 5
         X = output.CoefMatrix;
         sparsity_level = k;
         sparsity_coeff = output.numCoef(end);
         max_sparsity = k;
-        memory_final = d*k + nnz(X);
+        memory_final_1 = d*k + 2*nnz(X);
+        memory_final_2 = d*k + nnz(X);
         error_matrix = P - U*X;
         final_cost = mean(sqrt(sum(error_matrix.^2)));
     otherwise
@@ -261,18 +264,21 @@ switch algorithm_id
 %         
         if algorithm_id == 3
             %memory_final = k*d + (2*sparsity_level-1)*(n-k);
-            memory_final = k*d + sparsity_count(1)-k + sum((2*(2:sparsity_level)-1).*sparsity_count(2:end));
+            memory_final_1 = k*d + sparsity_count(1)-k + sum((2*(2:sparsity_level)-1).*sparsity_count(2:end));
+            memory_final_2 = d*k + n*sparsity_coeff;
         end
         if algorithm_id == 4
             %memory_final = k*d + sparsity_level*(n-k);
-            memory_final = k*d + sparsity_count(1)-k + sum((2*(2:sparsity_level)-1).*sparsity_count(2:end));
+            memory_final_1 = k*d + sparsity_count(1)-k + sum((2*(2:sparsity_level)-1).*sparsity_count(2:end));
+            memory_final_2 = d*k + n*sparsity_coeff;
         end
 end        
 
 % Compute various performance metrics, print them, and store the results
 memory_initial = n*d;
-compression_ratio = memory_final/memory_initial;
-results = [n, d, epsilon, k, memory_initial, memory_final, compression_ratio, sparsity_level, sparsity_coeff, final_cost, max_sparsity];
+compression_ratio_1 = memory_final_1/memory_initial;
+compression_ratio_2 = memory_final_2/memory_initial;
+results = [n, d, epsilon, k, memory_initial, memory_final_1, memory_final_2, compression_ratio_1, compression_ratio_2, sparsity_level, sparsity_coeff, final_cost, max_sparsity];
 string = sprintf('%0.5f,', results);
 string = [string func2str(stopping_func)];
 % if exist(['C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\' file_name '_' algorithm_name '_performance_metrics_epsilon=' num2str(epsilon) '_maxsparsity=' num2str(max_sparsity) '_stoppingcriterion=' func2str(stopping_func) '.csv'], 'file') == 0
@@ -286,14 +292,15 @@ string = [string func2str(stopping_func)];
 % fclose(fid);
 
 string = [file_name ',' algorithm_name ',' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results13.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results14.csv', 'a');
 fprintf(fid, string);
 fclose(fid);    
 
 disp(['Sparsity level:' num2str(sparsity_level)]);
 disp(['Sparsity coefficient:' num2str(sparsity_coeff)]);
 disp(['Final cost:' num2str(final_cost)]);
-disp(['Compression ratio:' num2str(compression_ratio)]);
+disp(['Compression ratio1:' num2str(compression_ratio_1)]);
+disp(['Compression ratio2:' num2str(compression_ratio_2)]);
 
 
 

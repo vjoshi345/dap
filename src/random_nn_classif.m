@@ -43,16 +43,24 @@ labels_X = labels(unselected);
 pred = zeros(n-k, 1);
 for i = 1:(n-k)
     index = pred_idx(:, i);
-    pred(i) = mode(labels_D(index));
+    % Weighting by distance
+    weights = sqrt(sum(bsxfun(@minus, X(:, i), D(:, index)).^2, 1))';
+    weights = 1./weights;
+    weights = weights/sum(weights);
+    [pot_labels, ~, ic] = unique(labels_D(index));
+    weights_by_labels = accumarray(ic, weights, size(pot_labels), @(x) sum(x));
+    [~, idx_label] = max(weights_by_labels);
+    pred(i) = pot_labels(idx_label); 
+%     pred(i) = mode(labels_D(index));
 end
 error = sum(~(pred == labels_X))*100/(n-k);
 
 %------------- STORE RESULTS -----------------------
-epsilon = 4.12032;
+epsilon = 4.4085;
 results = [n, d, epsilon, k, nneighbours, error];
 string = sprintf('%0.5f,', results);
 string = [file_name ',' 'randomized,' string '\n'];
-fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results12.csv', 'a');
+fid = fopen('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\output\results15.csv', 'a');
 fprintf(fid, string);
 fclose(fid);    
 
