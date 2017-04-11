@@ -16,7 +16,7 @@
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 3, param);
 % clear; param.stopping_criterion = 2; param.max_sparsity = 34;
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 4, param);
-% clear; param.stopping_criterion = 2; param.dictionary_size = 50;
+% clear; param.stopping_criterion = 1; param.dictionary_size = 50;
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\iono-mod-norm.csv', 5, param);
 % 
 
@@ -37,7 +37,7 @@
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\CTG-mod-norm.csv', 3, param);
 % clear; param.stopping_criterion = 2; param.max_sparsity = 21;
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\CTG-mod-norm.csv', 4, param);
-% clear; param.stopping_criterion = 2; param.dictionary_size = 300;
+% clear; param.stopping_criterion = 1; param.dictionary_size = 350;
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\CTG-mod-norm.csv', 5, param);
 % 
 % 
@@ -60,9 +60,9 @@
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 3, param);
 % clear; param.stopping_criterion = 2; param.max_sparsity = 30;
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 4, param);
-% clear; param.stopping_criterion = 2; param.dictionary_size = 100;
+% clear; param.stopping_criterion = 1; param.dictionary_size = 250;
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\wdbc-mod-norm.csv', 5, param);
-%
+
 
 
 
@@ -87,6 +87,30 @@
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2.csv', 5, param);
 
 
+
+% clear; param.stopping_criterion = 1; param.max_sparsity = 1;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 1, param);
+% clear; param.stopping_criterion = 1; param.max_sparsity = 2;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 2, param);
+% clear; param.stopping_criterion = 1; param.max_sparsity = 10;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 3, param);
+% clear; param.stopping_criterion = 1; param.max_sparsity = 10;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 4, param);
+%
+% clear; param.stopping_criterion = 2; param.max_sparsity = 1;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 1, param);
+% clearvars; param.stopping_criterion = 2; param.max_sparsity = 2;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 2, param);
+% clear; param.stopping_criterion = 2; param.max_sparsity = 10;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 3, param);
+% clear; param.stopping_criterion = 2; param.max_sparsity = 10;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 4, param);
+% clear; param.stopping_criterion = 1; param.dictionary_size = 250;
+% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 5, param);
+
+
+
+
 % clear; param.stopping_criterion = 1; param.max_sparsity = 1;
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups500_1.csv', 1, param);
 % clear; param.stopping_criterion = 1; param.max_sparsity = 2;
@@ -104,8 +128,8 @@
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups500_1.csv', 3, param);
 % clear; param.stopping_criterion = 2; param.max_sparsity = 10;
 % main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups500_1.csv', 4, param);
-% clear; param.stopping_criterion = 2; param.dictionary_size = 250;
-% main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups500_1.csv', 5, param);
+clear; param.stopping_criterion = 1; param.dictionary_size = 50;
+main('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\20newsgroups500_1.csv', 5, param);
 
 
 
@@ -260,11 +284,11 @@
 % dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 3, param)
 % dl_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', 4, param)
 
-for i = [1361, 824, 443, 428, 973, 384, 190, 191]
-    for j = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45]
-        random_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', i, j)
-    end
-end
+% % for i = [1361, 824, 443, 428, 973, 384, 190, 191]
+% %     for j = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45]
+% %         random_nn_classif('C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2-deskewed.csv', 'C:\CMU\CMU-Spring-2016\DAP\working-directory\dap\data\mnist2labels.csv', i, j)
+% %     end
+% end
 
 
 % param.stopping_criterion = 1;

@@ -107,11 +107,13 @@ end
 Dictionary = Dictionary*diag(1./sqrt(sum(Dictionary.*Dictionary)));
 Dictionary = Dictionary.*repmat(sign(Dictionary(1,:)),size(Dictionary,1),1); % multiply in the sign of the first element.
 totalErr = zeros(1,param.numIteration);
-avg_error = Inf;
+%avg_error = Inf;
+max_error = Inf;
 % the K-SVD algorithm starts here.
 iterNum = 1;
 %for iterNum = 1:param.numIteration *** Introduced a modification here ***
-while avg_error > param.errorGoal
+%while avg_error > param.errorGoal
+while max_error > param.errorGoal
     % find the coefficients
     if (param.errorFlag==0)
         %CoefMatrix = mexOMPIterative2(Data, [FixedDictionaryElement,Dictionary],param.L);
@@ -153,8 +155,10 @@ while avg_error > param.errorGoal
     end
     Dictionary = I_clearDictionary(Dictionary,CoefMatrix(size(FixedDictionaryElement,2)+1:end,:),Data);
     if (iterNum>1 && param.displayProgress)
-        avg_error = mean(sqrt(sum((Data - Dictionary*CoefMatrix).^2)));
-        disp(['Iteration   ',num2str(iterNum),'   Average error: ',num2str(avg_error)]);
+        %avg_error = mean(sqrt(sum((Data - Dictionary*CoefMatrix).^2)));
+        max_error = max(sqrt(sum((Data - Dictionary*CoefMatrix).^2)));
+        %disp(['Iteration   ',num2str(iterNum),'   Average error: ',num2str(avg_error)]);
+        disp(['Iteration   ',num2str(iterNum),'   Max error: ',num2str(max_error)]);
     end
     
     if (isfield(param,'waitBarHandle'))

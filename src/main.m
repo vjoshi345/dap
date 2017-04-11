@@ -212,7 +212,7 @@ switch algorithm_id
         memory_final_1 = d*k + 2*nnz(X);
         memory_final_2 = d*k + nnz(X);
         error_matrix = P - U*X;
-        final_cost = mean(sqrt(sum(error_matrix.^2)));
+        final_cost = stopping_func(sqrt(sum(error_matrix.^2)));
     otherwise
         %avg_dist_with_sparsity = zeros(1, max_sparsity);
         sparsity_level = max_sparsity;
